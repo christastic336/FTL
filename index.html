@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FTL Lesson Repository</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root{
+  --ink:#241832; --muted:#6b6377; --brand:#3E1A5C; --brand2:#6D4C8E; --accent:#1C7293;
+  --bg:#FAF9FB; --panel:#ffffff; --line:#E7E3EC; --chip:#F1EDF6;
+  --bio:#2E7D57; --bioBg:#E8F3EC; --chem:#2A5C86; --chemBg:#E4EEF6;
+  --phys:#6D3A8E; --physBg:#F3EEF8; --env:#1F7A63; --envBg:#EAF6EF;
+  --cross:#9A6B1E; --crossBg:#FBF3E4; --flag:#9A3B2E;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+.masthead{background:linear-gradient(135deg,var(--brand) 0%,#2b1140 100%);color:#fff;padding:22px clamp(16px,4vw,40px)}
+.masthead .wrap{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px}
+.wordmark{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(20px,2.6vw,28px);letter-spacing:-.01em;margin:0}
+.tagline{color:#D9C9EC;font-size:13.5px;margin:0}
+.status{margin-left:auto;font-size:12.5px;color:#D9C9EC;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:#8bd0b0;display:inline-block}
+.dot.offline{background:#E0B15A}
+
+/* Layout */
+.shell{max-width:1320px;margin:0 auto;padding:clamp(16px,3vw,28px);display:grid;grid-template-columns:288px 1fr;gap:24px;align-items:start}
+@media(max-width:880px){.shell{grid-template-columns:1fr}}
+
+/* Filter panel */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;position:sticky;top:16px}
+@media(max-width:880px){.panel{position:static}}
+.fgroup{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.fgroup:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.flabel{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand2);margin:0 0 9px}
+.search{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:14px;background:#fff}
+.search:focus{outline:2px solid var(--brand2);outline-offset:1px;border-color:transparent}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--ink);user-select:none;transition:.12s}
+.chip:hover{border-color:var(--brand2)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip.area[aria-pressed="true"]{color:#fff}
+
+/* Concept spine */
+.spine{display:flex;flex-direction:column;gap:6px}
+.day{cursor:pointer;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:center;transition:.12s}
+.day:hover{border-color:var(--brand2)}
+.day[aria-pressed="true"]{background:var(--brand);border-color:var(--brand)}
+.day[aria-pressed="true"] .dNum,.day[aria-pressed="true"] .dTheme,.day[aria-pressed="true"] .dSkill{color:#fff}
+.dNum{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--brand);text-align:center}
+.dTheme{font-size:12.5px;font-weight:600;line-height:1.25}
+.dSkill{font-size:11px;color:var(--muted)}
+
+.selrow{display:flex;gap:8px}
+select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:13px;background:#fff}
+.reset{width:100%;margin-top:4px;padding:10px;border:1px solid var(--line);background:#fff;border-radius:10px;font:inherit;font-size:13px;font-weight:600;color:var(--brand);cursor:pointer}
+.reset:hover{background:var(--chip)}
+
+/* Results */
+.resbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.count{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px}
+.count b{color:var(--brand)}
+.sortsel{margin-left:auto;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-left-width:5px;border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:9px}
+.card h3{font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:600;margin:0;line-height:1.3}
+.meta{font-size:12px;color:var(--muted)}
+.badges{display:flex;flex-wrap:wrap;gap:5px}
+.badge{font-size:11px;padding:2.5px 8px;border-radius:6px;background:var(--chip);color:var(--brand);font-weight:500}
+.badge.fit{background:#efe7f6}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:10.5px;padding:2px 6px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
+.summary{font-size:13px;color:#4a4356;margin:0}
+.cardfoot{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:6px;font-size:12px;flex-wrap:wrap}
+.src{color:var(--muted)}
+.flag{color:var(--flag);font-weight:600}
+.open{margin-left:auto;font-weight:600}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty h3{font-family:'Space Grotesk',sans-serif;color:var(--ink)}
+
+/* area accents */
+.a-Biology{border-left-color:var(--bio)} .a-Biology .badge.area{background:var(--bioBg);color:var(--bio)}
+.a-Chemistry{border-left-color:var(--chem)} .a-Chemistry .badge.area{background:var(--chemBg);color:var(--chem)}
+.a-Physics{border-left-color:var(--phys)} .a-Physics .badge.area{background:var(--physBg);color:var(--phys)}
+.a-Environmental{border-left-color:var(--env)} .a-Environmental .badge.area{background:var(--envBg);color:var(--env)}
+.a-Cross-cutting{border-left-color:var(--cross)} .a-Cross-cutting .badge.area{background:var(--crossBg);color:var(--cross)}
+.chip.area[data-v="Biology"][aria-pressed="true"]{background:var(--bio);border-color:var(--bio)}
+.chip.area[data-v="Chemistry"][aria-pressed="true"]{background:var(--chem);border-color:var(--chem)}
+.chip.area[data-v="Physics"][aria-pressed="true"]{background:var(--phys);border-color:var(--phys)}
+.chip.area[data-v="Environmental"][aria-pressed="true"]{background:var(--env);border-color:var(--env)}
+.chip.area[data-v="Cross-cutting"][aria-pressed="true"]{background:var(--cross);border-color:var(--cross)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <h1 class="wordmark">FTL Lesson Repository</h1>
+    <p class="tagline">Foundations of Teaching &amp; Learning — AP science feeder lessons</p>
+    <div class="status"><span class="dot" id="dot"></span><span id="statusText">Loading…</span></div>
+  </div>
+</header>
+
+<main class="shell">
+  <aside class="panel" aria-label="Filters">
+    <div class="fgroup">
+      <label class="flabel" for="q">Search</label>
+      <input id="q" class="search" type="search" placeholder="Title, keyword, topic…" autocomplete="off" />
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">Content area</div>
+      <div class="chips" id="areaChips"></div>
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">Concept spine — day &amp; skill</div>
+      <div class="spine" id="spine"></div>
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">Track &amp; year</div>
+      <div class="selrow">
+        <select id="trackSel">
+          <option value="">Any track</option>
+          <option value="Life">Life Sciences</option>
+          <option value="Physical">Physical Sciences</option>
+          <option value="skills">Skills spine (all)</option>
+        </select>
+        <select id="yearSel">
+          <option value="">Any year</option>
+          <option value="Micro">Micro (Yr 1)</option>
+          <option value="Macro">Macro (Yr 2)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">Science practices (SEP)</div>
+      <div class="chips" id="sepChips"></div>
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">Crosscutting concepts (CCC)</div>
+      <div class="chips" id="cccChips"></div>
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">Type &amp; source</div>
+      <div class="selrow" style="flex-direction:column;gap:8px">
+        <select id="typeSel"><option value="">Any lesson type</option></select>
+        <select id="srcSel"><option value="">Any source archive</option></select>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <div class="flabel">OpenSciEd &amp; confidence</div>
+      <div class="chips">
+        <span class="chip" id="oseMatch" data-v="match" aria-pressed="false">Has OpenSciEd match</span>
+        <span class="chip" id="oseNull" data-v="null" aria-pressed="false">No match (honest null)</span>
+        <span class="chip" id="lowFlag" aria-pressed="false">Low-confidence only</span>
+      </div>
+    </div>
+
+    <button class="reset" id="reset">Reset all filters</button>
+  </aside>
+
+  <section aria-label="Results">
+    <div class="resbar">
+      <span class="count"><b id="n">0</b> of <span id="total">0</span> lessons</span>
+      <label class="sortsel">Sort
+        <select id="sortSel">
+          <option value="area">by area</option>
+          <option value="title">by title</option>
+          <option value="day">by day</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <h3>No lessons match those filters</h3>
+      <p>Loosen a filter or clear the search to see more.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============================================================
+   CONFIG — paste your published Google Sheet CSV URL here.
+   File ▸ Share ▸ Publish to web ▸ choose the "Lessons" tab ▸
+   Comma-separated values (.csv) ▸ copy the link ▸ paste below.
+   Leave "" to run from the bundled data.json copy.
+   ============================================================ */
+const SHEET_CSV_URL = "";
+
+const SPINE=[
+  {n:1,theme:"Structure & Function",skill:"Modeling & Representation"},
+  {n:2,theme:"Energy & Matter",skill:"Data & Graphing"},
+  {n:3,theme:"Patterns · Scale / Quantity",skill:"Quantitative Reasoning"},
+  {n:4,theme:"Systems · Stability & Change",skill:"Argumentation & Literacy"}
+];
+const AREAS=["Biology","Chemistry","Physics","Environmental","Cross-cutting"];
+
+const state={q:"",areas:new Set(),days:new Set(),track:"",year:"",seps:new Set(),cccs:new Set(),type:"",src:"",ose:"",low:false,sort:"area"};
+let DATA=[];
+
+/* ---------- load ---------- */
+function setStatus(text,offline){document.getElementById('statusText').textContent=text;document.getElementById('dot').className='dot'+(offline?' offline':'');}
+function start(){
+  if(SHEET_CSV_URL){
+    Papa.parse(SHEET_CSV_URL,{download:true,header:true,skipEmptyLines:true,
+      complete:r=>{const rows=(r.data||[]).filter(x=>x.Title);if(rows.length){init(rows,'Live from Google Sheet · '+rows.length+' lessons',false);}else loadJson();},
+      error:loadJson});
+  } else loadJson();
+}
+function loadJson(){
+  fetch('./data.json').then(r=>r.json())
+    .then(d=>init(d,'Offline copy · '+d.length+' lessons',true))
+    .catch(()=>{document.getElementById('grid').innerHTML='';setStatus('Could not load data',true);});
+}
+function init(rows,status,offline){
+  DATA=rows.map(r=>{const o={};for(const k in r)o[k]=(r[k]==null?'':(''+r[k]).trim());return o;});
+  setStatus(status,offline);
+  document.getElementById('total').textContent=DATA.length;
+  buildControls();
+  render();
+}
+
+/* ---------- build controls ---------- */
+function chip(text,val,cls){const el=document.createElement('span');el.className='chip'+(cls?(' '+cls):'');el.textContent=text;el.dataset.v=val;el.setAttribute('aria-pressed','false');el.setAttribute('role','button');el.tabIndex=0;return el;}
+function toggle(el,set,val,onChange){const on=el.getAttribute('aria-pressed')==='true';el.setAttribute('aria-pressed',(!on).toString());if(on)set.delete(val);else set.add(val);onChange();}
+
+function buildControls(){
+  const ac=document.getElementById('areaChips');
+  AREAS.forEach(a=>{if(!DATA.some(r=>r.Content_Area===a))return;const c=chip(a,a,'area');ac.appendChild(c);
+    const h=()=>toggle(c,state.areas,a,render);c.onclick=h;c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();h();}};});
+
+  const sp=document.getElementById('spine');
+  SPINE.forEach(d=>{const b=document.createElement('button');b.className='day';b.type='button';b.setAttribute('aria-pressed','false');
+    b.innerHTML='<span class="dNum">'+d.n+'</span><span><span class="dTheme">'+d.theme+'</span><br><span class="dSkill">'+d.skill+'</span></span>';
+    b.onclick=()=>toggle(b,state.days,String(d.n),render);sp.appendChild(b);});
+
+  const sepc=document.getElementById('sepChips');
+  for(let i=1;i<=8;i++){const c=chip(String(i),String(i));sepc.appendChild(c);
+    const h=()=>toggle(c,state.seps,String(i),render);c.onclick=h;c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();h();}};}
+  const cccc=document.getElementById('cccChips');
+  for(let i=1;i<=7;i++){const c=chip(String(i),String(i));cccc.appendChild(c);
+    const h=()=>toggle(c,state.cccs,String(i),render);c.onclick=h;c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();h();}};}
+
+  fillSelect('typeSel',uniq('Lesson_Type'));
+  fillSelect('srcSel',uniq('Source_Archive'));
+
+  document.getElementById('q').oninput=debounce(e=>{state.q=e.target.value.toLowerCase();render();},160);
+  document.getElementById('trackSel').onchange=e=>{state.track=e.target.value;render();};
+  document.getElementById('yearSel').onchange=e=>{state.year=e.target.value;render();};
+  document.getElementById('typeSel').onchange=e=>{state.type=e.target.value;render();};
+  document.getElementById('srcSel').onchange=e=>{state.src=e.target.value;render();};
+  document.getElementById('sortSel').onchange=e=>{state.sort=e.target.value;render();};
+  bindOse('oseMatch','match');bindOse('oseNull','null');
+  const lf=document.getElementById('lowFlag');lf.onclick=()=>{state.low=!state.low;lf.setAttribute('aria-pressed',state.low.toString());render();};
+  document.getElementById('reset').onclick=resetAll;
+}
+function bindOse(id,val){const el=document.getElementById(id);el.onclick=()=>{state.ose=(state.ose===val?'':val);document.getElementById('oseMatch').setAttribute('aria-pressed',(state.ose==='match').toString());document.getElementById('oseNull').setAttribute('aria-pressed',(state.ose==='null').toString());render();};}
+function uniq(k){return [...new Set(DATA.map(r=>r[k]).filter(Boolean))].sort();}
+function fillSelect(id,vals){const s=document.getElementById(id);vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o);});}
+
+/* ---------- filter + render ---------- */
+function hasCode(field,prefix,set){if(!set.size)return true;for(const n of set){if((field||'').includes(prefix+' '+n))return true;}return false;}
+function matches(r){
+  if(state.q){const hay=(r.Title+' '+r.Keywords+' '+r.Summary+' '+r.Module_Unit+' '+r.Sub_Content).toLowerCase();if(!hay.includes(state.q))return false;}
+  if(state.areas.size&&!state.areas.has(r.Content_Area))return false;
+  if(state.days.size&&!state.days.has(String(r.FTL_Day)))return false;
+  if(state.track){if(state.track==='skills'){if(!/skills/i.test(r.FTL_Track))return false;}else if(!(r.FTL_Track||'').startsWith(state.track))return false;}
+  if(state.year&&r.FTL_Year!==state.year&&r.FTL_Year!=='Both')return false;
+  if(!hasCode(r.SEP,'SEP',state.seps))return false;
+  if(!hasCode(r.CCC,'CCC',state.cccs))return false;
+  if(state.type&&r.Lesson_Type!==state.type)return false;
+  if(state.src&&r.Source_Archive!==state.src)return false;
+  if(state.ose==='match'&&(r.OpenSciEd_Unit==='-'||r.OpenSciEd_Unit===''))return false;
+  if(state.ose==='null'&&r.OpenSciEd_Unit!=='-')return false;
+  if(state.low&&r.FTL_Fit_Confidence!=='Low'&&r.OSE_Confidence!=='Low')return false;
+  return true;
+}
+function sortRows(rows){
+  const by=state.sort;
+  return rows.sort((a,b)=>{
+    if(by==='title')return a.Title.localeCompare(b.Title);
+    if(by==='day')return (a.FTL_Day||'9').localeCompare(b.FTL_Day||'9')||a.Title.localeCompare(b.Title);
+    return (a.Content_Area+a.Sub_Content+a.Title).localeCompare(b.Content_Area+b.Sub_Content+b.Title);
+  });
+}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function codes(field){return (field||'').split(',').map(s=>s.trim()).filter(Boolean);}
+
+function render(){
+  const rows=sortRows(DATA.filter(matches));
+  document.getElementById('n').textContent=rows.length;
+  const grid=document.getElementById('grid'),empty=document.getElementById('empty');
+  if(!rows.length){grid.innerHTML='';empty.hidden=false;return;}
+  empty.hidden=true;
+  grid.innerHTML=rows.map(cardHTML).join('');
+}
+function cardHTML(r){
+  const low=(r.FTL_Fit_Confidence==='Low'||r.OSE_Confidence==='Low');
+  const sep=codes(r.SEP),ccc=codes(r.CCC);
+  const tags=[...sep,...ccc].slice(0,8).map(t=>'<span class="tag">'+esc(t)+'</span>').join('');
+  const fit=r.FTL_Fit?'<span class="badge fit">'+esc(r.FTL_Fit)+'</span>':'';
+  const open=r.View_URL?'<a class="open" href="'+esc(r.View_URL)+'" target="_blank" rel="noopener">Open in Drive ↗</a>':'';
+  const flag=low?'<span class="flag" title="Tag needs a human check">⚑ low confidence</span>':'';
+  return '<article class="card a-'+esc(r.Content_Area)+'">'
+    +'<div class="badges"><span class="badge area">'+esc(r.Content_Area)+'</span>'+fit+'</div>'
+    +'<h3>'+esc(r.Title)+'</h3>'
+    +'<div class="meta">'+esc(r.Sub_Content)+(r.Module_Unit?' · '+esc(r.Module_Unit):'')+'</div>'
+    +(tags?'<div class="tags">'+tags+'</div>':'')
+    +(r.Summary?'<p class="summary">'+esc(r.Summary)+'</p>':'')
+    +'<div class="cardfoot"><span class="src">'+esc(r.Source_Archive)+'</span>'+flag+open+'</div>'
+    +'</article>';
+}
+
+/* ---------- misc ---------- */
+function resetAll(){
+  state.q="";state.areas.clear();state.days.clear();state.track="";state.year="";state.seps.clear();state.cccs.clear();state.type="";state.src="";state.ose="";state.low=false;
+  document.getElementById('q').value="";
+  document.querySelectorAll('.chip,[aria-pressed]').forEach(el=>{if(el.hasAttribute('aria-pressed'))el.setAttribute('aria-pressed','false');});
+  ['trackSel','yearSel','typeSel','srcSel'].forEach(id=>document.getElementById(id).value="");
+  render();
+}
+function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+start();
+</script>
+</body>
+</html>
