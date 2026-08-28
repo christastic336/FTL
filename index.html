@@ -119,6 +119,85 @@ body.curator .curbanner{display:block}
 .favtools .fcount{color:var(--muted)}
 .favtools button{appearance:none;background:none;border:none;padding:0;font:inherit;font-size:11.5px;color:var(--purple2);cursor:pointer;text-decoration:underline}
 .favtools button:hover{color:var(--purple)}
+
+/* view tabs + plan chrome */
+.viewtabs{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.vtab{appearance:none;font:inherit;font-size:13px;font-weight:600;padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.vtab:hover{background:var(--lav);color:var(--purple2)}
+.vtab.on{background:var(--purple);border-color:var(--purple);color:#fff}
+.draftflag{font-size:11.5px;font-weight:600;color:var(--gold);background:var(--gold-surface);border:1px solid var(--gold-line);padding:5px 10px;border-radius:999px}
+.planbtn{appearance:none;font:inherit;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--lav2);background:#fff;color:var(--purple2);cursor:pointer}
+.planbtn:hover{background:var(--lav)}
+.planbtn.go{background:var(--purple);border-color:var(--purple);color:#fff}
+.planbtn.go:hover{background:var(--purple2)}
+.tabspacer{flex:1 1 auto}
+body.planview .rail{display:none}
+body.planview .shell{grid-template-columns:1fr}
+
+/* assignment chips on cards */
+.places{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.place{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 5px 3px 9px;border-radius:999px;border:1px solid var(--lav2);background:var(--lav);color:var(--purple)}
+.place.sec{background:#fff;color:var(--muted);border-color:var(--line);font-weight:500}
+.place .warn{color:var(--gold)}
+.place button{appearance:none;border:none;background:none;font:inherit;font-size:11px;line-height:1;color:inherit;opacity:.55;cursor:pointer;padding:2px 4px;border-radius:50%}
+.place button:hover{opacity:1;background:rgba(74,35,90,.1)}
+.assignbtn{appearance:none;font:inherit;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--lav2);background:#fff;color:var(--purple2);cursor:pointer}
+.assignbtn:hover{background:var(--lav)}
+.assignbtn.open{background:var(--lav);border-color:var(--purple2)}
+.apanel{margin-top:12px;padding:12px;border:1px solid var(--lav2);background:var(--lav);border-radius:11px}
+.arow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.arow .af{display:flex;flex-direction:column;gap:4px}
+.arow label{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.arow select{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-size:13px;color:var(--text)}
+.abtns{display:flex;gap:7px;margin-left:auto}
+.abtn{appearance:none;font:inherit;font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:8px;cursor:pointer;border:1px solid var(--purple);background:var(--purple);color:#fff}
+.abtn.sec{background:#fff;color:var(--purple2);border-color:var(--lav2)}
+.abtn.sec:hover{background:#fff;border-color:var(--purple2)}
+.afit{margin-top:10px;font-size:12px;line-height:1.5}
+.afit .okline{color:#2E6B45;font-weight:600}
+.afit .wline{color:var(--gold)}
+.afit .wline.hard{color:#A33}
+.afit .nline{color:var(--muted)}
+.aslot{margin-top:8px;font-size:12px;color:var(--muted)}
+.aslot b{color:var(--purple);font-weight:600}
+
+/* planner board */
+.boardsec{margin-bottom:26px}
+.boardhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.boardhead h3{font-family:"Fraunces",serif;font-size:18px;font-weight:600;color:var(--purple);margin:0}
+.boardhead .bnote{font-size:12px;color:var(--muted)}
+.boardhead .bstat{font-size:11.5px;color:var(--muted);margin-left:auto}
+.dayrow{display:grid;grid-template-columns:132px repeat(3,1fr);gap:10px;margin-bottom:10px;align-items:stretch}
+@media(max-width:1000px){.dayrow{grid-template-columns:1fr}}
+.daylab{background:var(--lav);border:1px solid var(--lav2);border-radius:11px;padding:11px 12px}
+.daylab .dnum{font-family:"Fraunces",serif;font-size:15px;font-weight:600;color:var(--purple)}
+.daylab .dtop{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.35}
+.slot{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 12px;display:flex;flex-direction:column}
+.slot.empty{border-style:dashed;background:#FDFCFE}
+.slot .shead{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.slot .sblk{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.slot .sstrand{font-size:12.5px;font-weight:600;color:var(--purple)}
+.slot .stopic{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.slot .scodes{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
+.slot .scode{font-family:"JetBrains Mono",monospace;font-size:10px;padding:2px 6px;border-radius:6px;background:var(--lav);color:var(--purple);border:1px solid var(--lav2)}
+.slot .scode.pe{background:#EAF3F3;color:var(--teal);border-color:#CFE3E3}
+.slot .scode.na{background:#fff;color:var(--muted);border:1px dashed var(--line)}
+.plist{margin-top:9px;border-top:1px solid var(--line);padding-top:8px}
+.plist h5{margin:0 0 5px;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.plist.pri h5{color:var(--purple2)}
+.pitem{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;padding:4px 0;border-bottom:1px dotted var(--line)}
+.pitem:last-child{border-bottom:none}
+.pitem .ptxt{flex:1 1 auto;line-height:1.35}
+.pitem .pwarn{color:var(--gold);font-size:11px;display:block;margin-top:2px}
+.pitem .pwarn.hard{color:#A33}
+.pitem .prm{appearance:none;border:none;background:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 4px;border-radius:4px;flex:0 0 auto}
+.pitem .prm:hover{background:var(--lav);color:var(--purple)}
+.pnone{font-size:11.5px;color:var(--muted);font-style:italic}
+.slot .fillbar{margin-top:9px;font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.slot .fillbar .need{color:var(--gold);font-weight:600}
+.orphan{background:var(--gold-surface);border:1px solid var(--gold-line);border-radius:11px;padding:13px 15px;margin-top:6px;font-size:12.5px;color:var(--gold)}
+.orphan b{display:block;margin-bottom:6px;font-size:13px}
+.orphan .oline{padding:3px 0}
 </style>
 </head>
 <body>
@@ -146,6 +225,7 @@ body.curator .curbanner{display:block}
     <div class="field"><label for="f_ccc">Crosscutting concept</label><select id="f_ccc"></select></div>
     <div class="field"><label for="f_ose">OpenSciEd unit</label><select id="f_ose"></select></div>
     <div class="field"><label for="f_type">Lesson type</label><select id="f_type"></select></div>
+    <div class="field"><label for="f_plan">Plan status</label><select id="f_plan"><option value="">Any plan status</option><option value="assigned">Assigned to a block</option><option value="unassigned">Not yet assigned</option><option value="primary">Primary somewhere</option><option value="secondary">Secondary somewhere</option></select></div>
     <div class="toggles">
       <label class="tog heart"><input type="checkbox" id="t_fav"><span class="lab"><strong>Favorites only</strong><span id="favSub">Heart a lesson to start a list</span></span></label>
       <label class="tog gold"><input type="checkbox" id="t_low"><span class="lab"><strong>Low-confidence only</strong><span>Worklist: tags that need a human check</span></span></label>
@@ -156,6 +236,14 @@ body.curator .curbanner{display:block}
   </aside>
 
   <main>
+    <div class="viewtabs">
+      <button type="button" class="vtab on" id="v_repo">Repository</button>
+      <button type="button" class="vtab" id="v_plan">Planner board</button>
+      <span class="tabspacer"></span>
+      <span class="draftflag" id="draftFlag" hidden></span>
+      <button type="button" class="planbtn" id="planDiscard" hidden>Discard draft</button>
+      <button type="button" class="planbtn go" id="planExport" hidden>Export assignments.json</button>
+    </div>
     <div class="curbanner">Curator mode on. “Fix tag” opens the row in the Google Sheet — only people with edit access can change it.</div>
     <div class="resbar">
       <div class="count" id="count">…</div>
@@ -222,6 +310,201 @@ function favSummary(){
   const sub=$("#favSub"); if(sub) sub.textContent = n ? ("Show only the "+n+" you hearted") : "Heart a lesson to start a list";
 }
 
+/* ============================================================
+   BLOCK PLAN
+   Slot definitions come from FTL_KAS_Crosswalk_1 (SEP / KAS PE /
+   OpenSciEd per block) and FTL_Gap_Map_Schedule (strand + swing
+   pattern). 4 track-years x 4 days x 3 lab blocks = 48 slots.
+   Assignments are NOT stored in the browser as the record of
+   truth - they live in assignments.json in the repo. The browser
+   only holds an unsaved draft until you export and commit.
+   ============================================================ */
+const TRACKS=[
+  {key:"LIFE-MICRO",track:"Life",year:"Micro",label:"Life Micro",note:"Biology ⇄ Environmental Science · Year 1"},
+  {key:"LIFE-MACRO",track:"Life",year:"Macro",label:"Life Macro",note:"Biology ⇄ Environmental Science · Year 2"},
+  {key:"PHYS-MICRO",track:"Physical",year:"Micro",label:"Physical Micro",note:"Chemistry ⇄ Physics · Year 1"},
+  {key:"PHYS-MACRO",track:"Physical",year:"Macro",label:"Physical Macro",note:"Chemistry ⇄ Physics · Year 2"}
+];
+const DAYTOPICS={
+  "LIFE-MICRO":["Chemistry of Life / Matter in Living & Environmental Systems","Chemical Processes / Energy & Matter Transformations","Cell Structure & Function / Structure-Function Across Scales","Cellular Processes / Transport, Energy & Regulation"],
+  "LIFE-MACRO":["Mendelian Genetics / Variation in Populations","Evolution & Natural Selection / Selection Pressures","The Tree of Life / Biodiversity & Classification","The Biosphere / Ecosystems, Energy Flow & Human Impact"],
+  "PHYS-MICRO":["Structure & States of Matter / Fundamental Forces","Bonding & Nomenclature / Waves & Light","Equations & Stoichiometry / Ratios & Rectilinear Motion","Mixtures, Solutions, IMFs / Energy Levels"],
+  "PHYS-MACRO":["Energy & Momentum Conservation / Energy in Chemical Systems","Fluids & Equations of State / Gas Laws & States of Matter","Thermal Energy, Work & Engines / Thermodynamics & Calorimetry","Charges & Electrical Energy / Electrochemistry"]
+};
+const BLOCKS={
+"LIFE-MICRO-D1-B1":{strand:"Biology",topic:"Macromolecules & water properties",sep:["S5"],pe:["HS-LS1-6"],ose:["B.2"],close:"Supporting",status:"Intended"},
+"LIFE-MICRO-D1-B2":{strand:"Env Science",topic:"Field water chemistry (DO, pH, ppm)",sep:["S4","S5"],pe:["HS-ESS2-5"],ose:["C.3"],close:"Supporting",status:"Intended"},
+"LIFE-MICRO-D1-B3":{strand:"Biology",topic:"Macromolecule ID task",sep:["S5"],pe:["HS-LS1-6"],ose:["B.2"],close:"Foundational",status:"Intended"},
+"LIFE-MICRO-D2-B1":{strand:"Biology",topic:"Enzyme / reaction-rate lab",sep:["S4"],pe:["HS-PS1-5","HS-LS1-7"],ose:["B.2"],close:"Supporting",status:"Intended"},
+"LIFE-MICRO-D2-B2":{strand:"Env Science",topic:"Decomposition / biogeochemical cycling",sep:["S4","S5"],pe:["HS-LS2-3","HS-ESS2-6"],ose:["B.2"],close:"Direct",status:"Intended"},
+"LIFE-MICRO-D2-B3":{strand:"Env Science",topic:"Biogeochemical-cycle model",sep:["S2"],pe:["HS-LS2-5"],ose:["B.2"],close:"Supporting",status:"Intended"},
+"LIFE-MICRO-D3-B1":{strand:"Biology",topic:"Cell structure-function; article to CER",sep:["S2","S7"],pe:["HS-LS1-2"],ose:["B.3"],close:"Direct",status:"Intended"},
+"LIFE-MICRO-D3-B2":{strand:"Env Science",topic:"Adaptation - transpiration, salinity",sep:["S2","S7"],pe:["HS-LS1-3"],ose:["B.3"],close:"Foundational",status:"Intended"},
+"LIFE-MICRO-D3-B3":{strand:"Biology",topic:"Structure-function + article-to-CER",sep:["S7","S8"],pe:["HS-LS1-2"],ose:["B.3"],close:"Supporting",status:"Intended"},
+"LIFE-MICRO-D4-B1":{strand:"Biology",topic:"Osmosis / diffusion - experimental design",sep:["S3","S4"],pe:["HS-LS1-3"],ose:["B.3"],close:"Direct",status:"Intended"},
+"LIFE-MICRO-D4-B2":{strand:"Env Science",topic:"Water potential in aquatic organisms",sep:["S3","S4"],pe:["HS-LS1-3"],ose:["B.3"],close:"Supporting",status:"Intended"},
+"LIFE-MICRO-D4-B3":{strand:"Env Science",topic:"Homeostasis under environmental stress",sep:["S3"],pe:["HS-LS1-3"],ose:["B.3"],close:"Supporting",status:"Intended"},
+"LIFE-MACRO-D1-B1":{strand:"Biology",topic:"Mendelian genetics - crosses, probability",sep:["S5"],pe:["HS-LS3-3","HS-LS3-1"],ose:["B.3"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D1-B2":{strand:"Env Science",topic:"Population variation & data",sep:["S4"],pe:["HS-LS2-2"],ose:["B.1"],close:"Supporting",status:"Intended"},
+"LIFE-MACRO-D1-B3":{strand:"Biology",topic:"Genetics data task",sep:["S4","S5"],pe:["HS-LS3-3"],ose:["B.3"],close:"Supporting",status:"Intended"},
+"LIFE-MACRO-D2-B1":{strand:"Biology",topic:"Natural selection with data to CER",sep:["S7","S6"],pe:["HS-LS4-2","HS-LS4-4"],ose:["B.4"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D2-B2":{strand:"Env Science",topic:"Selection pressures, invasive species",sep:["S7","S4"],pe:["HS-LS4-5"],ose:["B.4"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D2-B3":{strand:"Env Science",topic:"Resistance / population dynamics",sep:["S4"],pe:["HS-LS4-5","HS-LS2-2"],ose:["B.4","B.1"],close:"Supporting",status:"Intended"},
+"LIFE-MACRO-D3-B1":{strand:"Biology",topic:"Phylogeny - tree models",sep:["S2"],pe:["HS-LS4-1"],ose:["B.5"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D3-B2":{strand:"Env Science",topic:"Biodiversity indices (Simpson / Shannon)",sep:["S5"],pe:["HS-LS2-2"],ose:["B.1"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D3-B3":{strand:"Biology",topic:"Diversity / classification task",sep:["S2","S4"],pe:["HS-LS4-1","HS-LS2-2"],ose:["B.5","B.1"],close:"Supporting",status:"Intended"},
+"LIFE-MACRO-D4-B1":{strand:"Biology",topic:"Ecosystem energy flow (10% rule)",sep:["S5"],pe:["HS-LS2-4","HS-LS2-3"],ose:["B.2","B.1"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D4-B2":{strand:"Env Science",topic:"Energy pyramids, ecology, human impact",sep:["S4","S5"],pe:["HS-LS2-7","HS-LS2-1"],ose:["B.1"],close:"Direct",status:"Intended"},
+"LIFE-MACRO-D4-B3":{strand:"Env Science",topic:"Human-impact / cycling task",sep:["S5","S4"],pe:["HS-LS2-7","HS-ESS3-6"],ose:["B.1","B.2"],close:"Supporting",status:"Intended"},
+"PHYS-MICRO-D1-B1":{strand:"Chemistry",topic:"Matter structure & states - measurement",sep:["S5","S4"],pe:["HS-PS1-1","HS-PS1-3"],ose:["C.2","C.3"],close:"Foundational",status:"Intended"},
+"PHYS-MICRO-D1-B2":{strand:"Physics",topic:"Fundamental forces - force diagrams",sep:["S2"],pe:["HS-PS2-1"],ose:["P.2"],close:"Foundational",status:"Intended"},
+"PHYS-MICRO-D1-B3":{strand:"Chemistry",topic:"States-of-matter measurement task",sep:["S4"],pe:["HS-PS1-3"],ose:["C.2"],close:"Foundational",status:"Intended"},
+"PHYS-MICRO-D2-B1":{strand:"Chemistry",topic:"Bonding & nomenclature - models",sep:["S2"],pe:["HS-PS1-1","HS-PS1-2"],ose:["C.3"],close:"Supporting",status:"Intended"},
+"PHYS-MICRO-D2-B2":{strand:"Physics",topic:"Waves & light - wave-data graphing",sep:["S4"],pe:["HS-PS4-1"],ose:["P.5"],close:"Supporting",status:"Intended"},
+"PHYS-MICRO-D2-B3":{strand:"Physics",topic:"Waves / light task",sep:["S4"],pe:["HS-PS4-1"],ose:["P.5"],close:"Foundational",status:"Intended"},
+"PHYS-MICRO-D3-B1":{strand:"Chemistry",topic:"Stoichiometry ratio task",sep:["S5"],pe:["HS-PS1-7"],ose:["C.4"],close:"Supporting",status:"Intended"},
+"PHYS-MICRO-D3-B2":{strand:"Physics",topic:"Rectilinear motion - linearization",sep:["S4","S5"],pe:["HS-PS2-1"],ose:["P.2"],close:"Direct",status:"Intended"},
+"PHYS-MICRO-D3-B3":{strand:"Chemistry",topic:"Stoichiometry lab",sep:["S5"],pe:["HS-PS1-7"],ose:["C.4"],close:"Foundational",status:"Intended"},
+"PHYS-MICRO-D4-B1":{strand:"Chemistry",topic:"Solutions & IMFs investigation",sep:["S3"],pe:["HS-PS1-3"],ose:["C.3"],close:"Supporting",status:"Intended"},
+"PHYS-MICRO-D4-B2":{strand:"Physics",topic:"Energy levels - energy-bar / LOL",sep:["S2"],pe:["HS-PS3-2"],ose:["P.1"],close:"Foundational",status:"Intended"},
+"PHYS-MICRO-D4-B3":{strand:"Physics",topic:"Energy-representation task",sep:["S2"],pe:["HS-PS3-2"],ose:["P.1"],close:"Foundational",status:"Intended"},
+"PHYS-MACRO-D1-B1":{strand:"Chemistry",topic:"Energy in chemical systems (bond / reaction energy)",sep:["S5"],pe:["HS-PS1-4"],ose:["C.5"],close:"Supporting",status:"Intended"},
+"PHYS-MACRO-D1-B2":{strand:"Physics",topic:"Energy & momentum - LOL charts, Hooke's, pendulum",sep:["S2","S4"],pe:["HS-PS3-2","HS-PS2-2"],ose:["P.1","P.3"],close:"Direct",status:"Built"},
+"PHYS-MACRO-D1-B3":{strand:"Physics",topic:"Collision impulse / elastic to grav PE (override)",sep:["S4","S2"],pe:["HS-PS2-2","HS-PS2-3"],ose:["P.3"],close:"Direct",status:"Built"},
+"PHYS-MACRO-D2-B1":{strand:"Chemistry",topic:"Gas laws (Boyle / Charles), formula mass",sep:["S4","S5"],pe:["HS-PS3-2"],ose:["C.2"],close:"Supporting",status:"Built"},
+"PHYS-MACRO-D2-B2":{strand:"Physics",topic:"Fluids - Bernoulli, continuity, buoyancy",sep:["S4"],pe:[],ose:[],close:"Skill-only",status:"Built"},
+"PHYS-MACRO-D2-B3":{strand:"Physics",topic:"Continuity / buoyancy (fluids)",sep:["S4"],pe:[],ose:[],close:"Skill-only",status:"Built"},
+"PHYS-MACRO-D3-B1":{strand:"Chemistry",topic:"Calorimetry, specific heat",sep:["S4","S5"],pe:["HS-PS3-4"],ose:["C.1"],close:"Direct",status:"Built"},
+"PHYS-MACRO-D3-B2":{strand:"Physics",topic:"Thermo processes, PV diagrams, engines",sep:["S2"],pe:["HS-PS3-2","HS-PS3-4"],ose:["C.1","P.1"],close:"Supporting",status:"Built"},
+"PHYS-MACRO-D3-B3":{strand:"Chemistry",topic:"Enthalpy / entropy of fusion; entropy reading",sep:["S2","S8"],pe:["HS-PS1-4"],ose:["C.5"],close:"Foundational",status:"Built"},
+"PHYS-MACRO-D4-B1":{strand:"Chemistry",topic:"Electrochemistry - redox cells, electrolysis",sep:["S3","S2"],pe:["HS-PS1-2"],ose:["C.2"],close:"Supporting",status:"Built"},
+"PHYS-MACRO-D4-B2":{strand:"Physics",topic:"Electrostatics, fields, equipotential, circuits",sep:["S2"],pe:["HS-PS2-4","HS-PS3-5"],ose:["C.2","P.1"],close:"Direct",status:"Built"},
+"PHYS-MACRO-D4-B3":{strand:"Physics",topic:"Circuits / Charged Balloons FRQ",sep:["S2","S7"],pe:["HS-PS3-5","HS-PS2-4"],ose:["C.2","P.1"],close:"Direct",status:"Built"}
+};
+const STRAND_AREA={"Biology":"Biology","Env Science":"Environmental","Chemistry":"Chemistry","Physics":"Physics"};
+function slotMeta(key){
+  const b=BLOCKS[key]; if(!b) return null;
+  const tk=key.slice(0,key.indexOf("-D"));
+  const m=/-D(\d)-B(\d)$/.exec(key);
+  const t=TRACKS.find(x=>x.key===tk);
+  return {key:key,tkey:tk,tinfo:t,day:+m[1],block:+m[2],dayTopic:(DAYTOPICS[tk]||[])[+m[1]-1]||"",
+          strand:b.strand,topic:b.topic,sep:b.sep,pe:b.pe,ose:b.ose,close:b.close,status:b.status};
+}
+function slotLabel(key){ const m=slotMeta(key); return m ? (m.tinfo.label+" · D"+m.day+"·B"+m.block) : key; }
+
+/* ---------- plan state: published file + local draft ---------- */
+const PLAN_KEY="ftl.plan.draft.v1";
+let PUBLISHED={slots:{}};
+let PLAN={slots:{}};
+let PLAN_SRC="none";
+function normPlan(p){
+  const o={};
+  Object.keys((p&&p.slots)||{}).sort().forEach(k=>{
+    const s=p.slots[k]||{};
+    const pr=(s.primary||[]).slice(), se=(s.secondary||[]).slice();
+    if(pr.length||se.length) o[k]={primary:pr,secondary:se};
+  });
+  return JSON.stringify(o);
+}
+function planDirty(){ return normPlan(PLAN)!==normPlan(PUBLISHED); }
+function clonePlan(p){ return JSON.parse(JSON.stringify({slots:(p&&p.slots)||{}})); }
+function saveDraft(){
+  try{
+    if(planDirty()) localStorage.setItem(PLAN_KEY,JSON.stringify(PLAN));
+    else localStorage.removeItem(PLAN_KEY);
+  }catch(e){ console.warn("Draft not saved locally:",e.message); }
+}
+function loadDraft(){
+  try{
+    const raw=localStorage.getItem(PLAN_KEY);
+    if(!raw) return null;
+    const d=JSON.parse(raw);
+    return (d&&d.slots)?{slots:d.slots}:null;
+  }catch(e){ return null; }
+}
+function planCount(){
+  let pri=0,sec=0,filled=0;
+  Object.keys(PLAN.slots||{}).forEach(k=>{
+    if(!BLOCKS[k]) return;                       // orphans counted separately
+    const s=PLAN.slots[k]||{}; const a=(s.primary||[]).length, b=(s.secondary||[]).length;
+    pri+=a; sec+=b; if(a||b) filled++;
+  });
+  return {pri:pri,sec:sec,filled:filled,slots:Object.keys(BLOCKS).length};
+}
+function orphanSlots(){
+  return Object.keys(PLAN.slots||{}).filter(k=>{
+    if(BLOCKS[k]) return false;
+    const s=PLAN.slots[k]||{};
+    return ((s.primary||[]).length||(s.secondary||[]).length);
+  }).sort();
+}
+function placements(id){
+  const out=[]; if(!id) return out;
+  Object.keys(PLAN.slots||{}).forEach(k=>{
+    const s=PLAN.slots[k]||{};
+    if((s.primary||[]).indexOf(id)>=0) out.push({key:k,pri:"primary"});
+    if((s.secondary||[]).indexOf(id)>=0) out.push({key:k,pri:"secondary"});
+  });
+  out.sort((a,b)=>a.key.localeCompare(b.key));
+  return out;
+}
+function assignTo(id,key,pri){
+  if(!id||!BLOCKS[key]) return;
+  const s=PLAN.slots[key]=PLAN.slots[key]||{primary:[],secondary:[]};
+  s.primary=(s.primary||[]).filter(x=>x!==id);
+  s.secondary=(s.secondary||[]).filter(x=>x!==id);
+  s[pri].push(id);
+  saveDraft();
+}
+function unassignFrom(id,key){
+  const s=PLAN.slots[key]; if(!s) return;
+  s.primary=(s.primary||[]).filter(x=>x!==id);
+  s.secondary=(s.secondary||[]).filter(x=>x!==id);
+  if(!s.primary.length&&!s.secondary.length) delete PLAN.slots[key];
+  saveDraft();
+}
+function lessonById(id){ return DATA.find(d=>d.id===id)||null; }
+
+/* ---------- fit check (SEP / PE / strand / track - CCC shown, not enforced) ---------- */
+function sepCodes(v){
+  const o=[];
+  (v||"").split(/[,;]/).forEach(t=>{ const m=/SEP\s*(\d)/i.exec(t); if(m) o.push("S"+m[1]); });
+  return o.filter((x,i,a)=>a.indexOf(x)===i);
+}
+function peCodes(v){
+  const o=[]; const re=/HS-([A-Z]+)(\d)-(\d+)((?:\s*\/\s*\d+)*)/g; let m;
+  while((m=re.exec(v||""))){
+    const base="HS-"+m[1]+m[2]+"-";
+    o.push(base+m[3]);
+    if(m[4]) m[4].split("/").forEach(x=>{ x=x.trim(); if(x) o.push(base+x); });
+  }
+  return o.filter((x,i,a)=>a.indexOf(x)===i);
+}
+function fitCheck(d,key){
+  const b=slotMeta(key); const w=[];
+  if(!b) return w;
+  const wantTrack = b.tinfo.track==="Life" ? "Life Sciences" : "Physical Sciences";
+  const lt=d.track||"";
+  if(lt && lt.indexOf("All tracks")<0 && lt!==wantTrack)
+    w.push({lvl:"hard",txt:"Tagged "+lt+", this block is "+b.tinfo.label});
+  if(d.area && d.area!=="Cross-cutting" && STRAND_AREA[b.strand] && d.area!==STRAND_AREA[b.strand])
+    w.push({lvl:"hard",txt:"Lesson is "+d.area+", block strand is "+b.strand});
+  if(d.year && d.year!=="Both" && d.year!==b.tinfo.year)
+    w.push({lvl:"soft",txt:"Tagged "+d.year+" year, block is "+b.tinfo.year});
+  if(d.day && String(d.day)!==String(b.day))
+    w.push({lvl:"soft",txt:"Tagged Day "+d.day+", block is Day "+b.day});
+  const ls=sepCodes(d.sep);
+  if(ls.length && b.sep.length && !ls.some(x=>b.sep.indexOf(x)>=0))
+    w.push({lvl:"soft",txt:"SEP "+ls.join("/")+" vs block "+b.sep.join("/")});
+  const lp=peCodes(d.pe);
+  if(!b.pe.length) w.push({lvl:"note",txt:"Block has no KAS HS PE (practice vehicle only)"});
+  else if(lp.length && !lp.some(x=>b.pe.indexOf(x)>=0))
+    w.push({lvl:"soft",txt:"PE "+lp.join(", ")+" vs block "+b.pe.join(", ")});
+  else if(!lp.length) w.push({lvl:"note",txt:"Lesson has no PE tagged"});
+  return w;
+}
+function worstLvl(ws){ return ws.some(x=>x.lvl==="hard")?"hard":(ws.some(x=>x.lvl==="soft")?"soft":""); }
+
 /* ---------- CSV parse (published feed) ---------- */
 function parseCSV(text){
   const rows=[];let row=[],cur="",q=false;
@@ -258,7 +541,7 @@ function fromFeed(text){
 
 /* ---------- state ---------- */
 let DATA=BAKED.slice();
-const F={q:"",track:"",year:"",day:"",area:"",pe:"",sep:"",ccc:"",ose:"",type:"",low:false,fav:false};
+const F={q:"",track:"",year:"",day:"",area:"",pe:"",sep:"",ccc:"",ose:"",type:"",low:false,fav:false,plan:""};
 
 function uniqTokens(field,split){
   const s=new Set();
@@ -293,13 +576,20 @@ function match(d){
   if(F.ose&&!tokens(d.ose).includes(F.ose))return false;
   if(F.low&&!(d.oseConf==="Low"||d.fitConf==="Low"))return false;
   if(F.fav&&!isFav(d))return false;
+  if(F.plan){
+    const ps=placements(d.id);
+    if(F.plan==="assigned"&&!ps.length)return false;
+    if(F.plan==="unassigned"&&ps.length)return false;
+    if(F.plan==="primary"&&!ps.some(x=>x.pri==="primary"))return false;
+    if(F.plan==="secondary"&&!ps.some(x=>x.pri==="secondary"))return false;
+  }
   if(F.q){const q=F.q.toLowerCase();const hay=(d.title+" "+d.summary+" "+d.id+" "+d.sub+" "+d.flags+" "+d.pe).toLowerCase();if(!hay.includes(q))return false;}
   return true;
 }
 function yearClass(y){return y==="Micro"?"micro":y==="Macro"?"macro":"both";}
 function chip(cls,txt){const c=el("span","chip "+cls,txt);return c;}
 
-function render(){
+function renderList(){
   const list=DATA.filter(match);
   $("#count").innerHTML="<b>"+list.length+"</b> "+(list.length===1?"lesson":"lessons");
   const low=DATA.filter(d=>d.oseConf==="Low"||d.fitConf==="Low").length;
@@ -363,10 +653,210 @@ function render(){
     conf.appendChild(document.createTextNode((flagged?"Low confidence":(d.oseConf||"—")+" confidence")));
     act.appendChild(conf);
     const fx=el("a","fix","✎ Fix tag in sheet");fx.href=fixUrl(d);fx.target="_blank";fx.rel="noopener";act.appendChild(fx);
+    let panel=null, abtn=null;
+    if(d.id){
+      abtn=el("button","assignbtn","Assign to block\u2026"); abtn.type="button"; act.appendChild(abtn);
+      abtn.addEventListener("click",()=>{
+        if(panel){ panel.remove(); panel=null; abtn.classList.remove("open"); return; }
+        abtn.classList.add("open");
+        panel=buildAssignPanel(d,()=>{ if(panel){panel.remove();panel=null;} abtn.classList.remove("open"); render(); });
+        card.appendChild(panel);
+      });
+    }
     card.appendChild(act);
+    const pls=placements(d.id);
+    if(pls.length){
+      const pbox=el("div","places");
+      pls.forEach(pp=>{
+        const ws=fitCheck(d,pp.key).filter(x=>x.lvl!=="note");
+        const chipEl=el("span","place"+(pp.pri==="secondary"?" sec":""));
+        chipEl.appendChild(document.createTextNode(slotLabel(pp.key)+" \u00b7 "+(pp.pri==="primary"?"Primary":"Secondary")));
+        if(ws.length){ const wn=el("span","warn","\u26a0"); wn.title=ws.map(x=>x.txt).join(" \u00b7 "); chipEl.appendChild(wn); }
+        const rm=el("button",null,"\u2715"); rm.type="button"; rm.title="Remove from "+slotLabel(pp.key);
+        rm.addEventListener("click",()=>{ unassignFrom(d.id,pp.key); render(); });
+        chipEl.appendChild(rm);
+        pbox.appendChild(chipEl);
+      });
+      card.appendChild(pbox);
+    }
     frag.appendChild(card);
   });
   box.appendChild(frag);
+}
+
+/* ---------- assign panel ---------- */
+function buildAssignPanel(d,done){
+  const p=el("div","apanel");
+  const row=el("div","arow");
+  function fld(labelTxt,opts,val){
+    const f=el("div","af");
+    f.appendChild(el("label",null,labelTxt));
+    const sel=document.createElement("select");
+    opts.forEach(o=>sel.appendChild(new Option(o[1],o[0])));
+    if(val!=null) sel.value=val;
+    f.appendChild(sel); row.appendChild(f); return sel;
+  }
+  const guessT=((d.track||"").indexOf("Life")>=0?"LIFE":"PHYS")+"-"+(d.year==="Macro"?"MACRO":"MICRO");
+  const tkSel=fld("Track / year",TRACKS.map(t=>[t.key,t.label]),TRACKS.some(t=>t.key===guessT)?guessT:"LIFE-MICRO");
+  const daySel=fld("Day",[1,2,3,4].map(n=>[String(n),"Day "+n]),("1234".indexOf(String(d.day))>=0&&d.day)?String(d.day):"1");
+  const blkSel=fld("Block",[["1","Block 1 \u00b7 Strand A"],["2","Block 2 \u00b7 Strand B"],["3","Block 3 \u00b7 Swing"]],"1");
+  const btns=el("div","abtns");
+  const bp=el("button","abtn","Add as primary"); bp.type="button";
+  const bs=el("button","abtn sec","Add as secondary"); bs.type="button";
+  btns.appendChild(bp); btns.appendChild(bs); row.appendChild(btns);
+  p.appendChild(row);
+  const info=el("div","aslot"); p.appendChild(info);
+  const fitBox=el("div","afit"); p.appendChild(fitBox);
+  function slotKey(){ return tkSel.value+"-D"+daySel.value+"-B"+blkSel.value; }
+  function refresh(){
+    const m=slotMeta(slotKey());
+    info.innerHTML=""; fitBox.innerHTML="";
+    if(!m){ info.textContent="No such block."; return; }
+    info.innerHTML="<b>"+m.strand+"</b> \u00b7 "+m.topic+"<br>Day "+m.day+": "+m.dayTopic+" \u00b7 SEP "+(m.sep.join("/")||"\u2014")+" \u00b7 "+(m.pe.length?m.pe.join(", "):"no KAS HS PE")+(m.ose.length?(" \u00b7 OpenSciEd "+m.ose.join(", ")):"")+" \u00b7 "+m.close+" / "+m.status;
+    const ws=fitCheck(d,slotKey());
+    const real=ws.filter(x=>x.lvl!=="note");
+    if(!real.length) fitBox.appendChild(el("div","okline","\u2713 Fits this block on track, strand, SEP and PE."));
+    real.forEach(x=>fitBox.appendChild(el("div","wline"+(x.lvl==="hard"?" hard":""),(x.lvl==="hard"?"\u2715 ":"\u26a0 ")+x.txt)));
+    ws.filter(x=>x.lvl==="note").forEach(x=>fitBox.appendChild(el("div","nline",x.txt)));
+    const cc=tokens(d.ccc);
+    if(cc.length) fitBox.appendChild(el("div","nline","CCC on this lesson: "+cc.join(", ")+" \u2014 not checked, blocks carry no CCC targets yet."));
+  }
+  [tkSel,daySel,blkSel].forEach(x=>x.addEventListener("change",refresh));
+  bp.addEventListener("click",()=>{ assignTo(d.id,slotKey(),"primary"); done(); });
+  bs.addEventListener("click",()=>{ assignTo(d.id,slotKey(),"secondary"); done(); });
+  refresh();
+  return p;
+}
+
+/* ---------- planner board ---------- */
+function renderBoard(){
+  const box=$("#results"); box.innerHTML="";
+  const c=planCount();
+  $("#count").innerHTML="<b>"+c.filled+"</b> of "+c.slots+" blocks filled";
+  $("#hint").textContent=c.pri+" primary \u00b7 "+c.sec+" secondary";
+  const frag=document.createDocumentFragment();
+  TRACKS.forEach(t=>{
+    const sec=el("div","boardsec");
+    const hd=el("div","boardhead");
+    hd.appendChild(el("h3",null,t.label));
+    hd.appendChild(el("span","bnote",t.note));
+    let f=0,pr=0,se=0;
+    for(let dy=1;dy<=4;dy++)for(let bk=1;bk<=3;bk++){
+      const st=PLAN.slots[t.key+"-D"+dy+"-B"+bk];
+      if(st){ const a=(st.primary||[]).length,b=(st.secondary||[]).length; if(a||b)f++; pr+=a; se+=b; }
+    }
+    hd.appendChild(el("span","bstat",f+"/12 blocks \u00b7 "+pr+" primary \u00b7 "+se+" secondary"));
+    sec.appendChild(hd);
+    for(let dy=1;dy<=4;dy++){
+      const row=el("div","dayrow");
+      const dl=el("div","daylab");
+      dl.appendChild(el("div","dnum","Day "+dy));
+      dl.appendChild(el("div","dtop",(DAYTOPICS[t.key]||[])[dy-1]||""));
+      row.appendChild(dl);
+      for(let bk=1;bk<=3;bk++){
+        const key=t.key+"-D"+dy+"-B"+bk;
+        const m=slotMeta(key);
+        const st=PLAN.slots[key]||{primary:[],secondary:[]};
+        const nP=(st.primary||[]).length, nS=(st.secondary||[]).length;
+        const cell=el("div","slot"+((nP||nS)?"":" empty"));
+        const sh=el("div","shead");
+        sh.appendChild(el("span","sblk","Block "+bk+(bk===3?" \u00b7 swing":"")));
+        sh.appendChild(el("span","sstrand",m.strand));
+        cell.appendChild(sh);
+        cell.appendChild(el("div","stopic",m.topic));
+        const codes=el("div","scodes");
+        m.sep.forEach(x=>codes.appendChild(el("span","scode",x)));
+        if(m.pe.length) m.pe.forEach(x=>codes.appendChild(el("span","scode pe",x)));
+        else codes.appendChild(el("span","scode na","no KAS HS PE"));
+        m.ose.forEach(x=>codes.appendChild(el("span","scode","OSE "+x)));
+        cell.appendChild(codes);
+        [["primary","Primary \u2014 must cover"],["secondary","Secondary \u2014 if time allows"]].forEach(pair=>{
+          const pri=pair[0];
+          const bx=el("div","plist"+(pri==="primary"?" pri":""));
+          bx.appendChild(el("h5",null,pair[1]));
+          const ids=st[pri]||[];
+          if(!ids.length) bx.appendChild(el("div","pnone",pri==="primary"?"nothing assigned yet":"none"));
+          ids.forEach(id=>{
+            const ld=lessonById(id);
+            const it=el("div","pitem");
+            const tx=el("div","ptxt");
+            tx.appendChild(document.createTextNode(ld?ld.title:("Unknown lesson "+id)));
+            if(ld){
+              const ws=fitCheck(ld,key).filter(x=>x.lvl!=="note");
+              if(ws.length) tx.appendChild(el("span","pwarn"+(worstLvl(ws)==="hard"?" hard":""),ws.map(x=>x.txt).join(" \u00b7 ")));
+            } else {
+              tx.appendChild(el("span","pwarn hard","This ID is not in the current lesson list"));
+            }
+            it.appendChild(tx);
+            const rm=el("button","prm","\u2715"); rm.type="button"; rm.title="Remove from this block";
+            rm.addEventListener("click",()=>{ unassignFrom(id,key); render(); });
+            it.appendChild(rm);
+            bx.appendChild(it);
+          });
+          cell.appendChild(bx);
+        });
+        row.appendChild(cell);
+      }
+      sec.appendChild(row);
+    }
+    frag.appendChild(sec);
+  });
+  const orph=orphanSlots();
+  if(orph.length){
+    const ob=el("div","orphan");
+    ob.appendChild(el("b",null,"Assignments pointing at blocks that no longer exist"));
+    orph.forEach(k=>{
+      const st=PLAN.slots[k]||{};
+      const ids=(st.primary||[]).concat(st.secondary||[]);
+      const line=el("div","oline");
+      line.appendChild(document.createTextNode(k+" \u2014 "+ids.map(id=>{const ld=lessonById(id);return ld?ld.title:id;}).join(", ")+" "));
+      const rm=el("button","prm","\u2715 drop"); rm.type="button";
+      rm.addEventListener("click",()=>{ delete PLAN.slots[k]; saveDraft(); render(); });
+      line.appendChild(rm);
+      ob.appendChild(line);
+    });
+    frag.appendChild(ob);
+  }
+  box.appendChild(frag);
+}
+
+/* ---------- view dispatch + plan chrome ---------- */
+let VIEW="repo";
+function updateChrome(){
+  const dirty=planDirty(), c=planCount();
+  const flag=$("#draftFlag");
+  flag.hidden=!dirty;
+  if(dirty) flag.textContent="Unsaved draft \u00b7 "+c.pri+" primary, "+c.sec+" secondary \u2014 export and commit to publish";
+  $("#planDiscard").hidden=!dirty;
+  $("#planExport").hidden=!(dirty||c.pri||c.sec);
+  $("#v_repo").classList.toggle("on",VIEW==="repo");
+  $("#v_plan").classList.toggle("on",VIEW==="plan");
+  document.body.classList.toggle("planview",VIEW==="plan");
+}
+function render(){ if(VIEW==="plan") renderBoard(); else renderList(); updateChrome(); }
+function planJSON(){
+  const out={schema:"ftl.assignments/1",updated:new Date().toISOString().slice(0,10),slots:{}};
+  Object.keys(PLAN.slots||{}).sort().forEach(k=>{
+    const st=PLAN.slots[k]||{};
+    if((st.primary||[]).length||(st.secondary||[]).length) out.slots[k]={primary:st.primary||[],secondary:st.secondary||[]};
+  });
+  return JSON.stringify(out,null,2)+"\n";
+}
+function exportPlan(){
+  const blob=new Blob([planJSON()],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download="assignments.json";
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },0);
+}
+async function loadPlan(){
+  try{
+    const r=await fetch("assignments.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); if(j&&j.slots){ PUBLISHED={slots:j.slots}; PLAN_SRC="file"; } }
+  }catch(e){ console.warn("assignments.json not loaded:",e.message); }
+  PLAN=clonePlan(PUBLISHED);
+  const dr=loadDraft();
+  if(dr) PLAN=clonePlan(dr);
 }
 
 /* ---------- wire up ---------- */
@@ -380,10 +870,21 @@ function bind(){
     if(!FAVS.size)return;
     FAVS.clear();saveFavs();favSummary();render();
   });
+  $("#f_plan").addEventListener("change",e=>{F.plan=e.target.value;render();});
+  $("#v_repo").addEventListener("click",()=>{VIEW="repo";render();});
+  $("#v_plan").addEventListener("click",()=>{VIEW="plan";render();});
+  $("#planExport").addEventListener("click",exportPlan);
+  let discardArmed=false;
+  $("#planDiscard").addEventListener("click",()=>{
+    const b=$("#planDiscard");
+    if(!discardArmed){ discardArmed=true; b.textContent="Click again to discard"; setTimeout(()=>{discardArmed=false;b.textContent="Discard draft";},4000); return; }
+    discardArmed=false; b.textContent="Discard draft";
+    PLAN=clonePlan(PUBLISHED); saveDraft(); render();
+  });
   $("#t_cur").addEventListener("change",e=>{document.body.classList.toggle("curator",e.target.checked);});
   $("#clear").addEventListener("click",()=>{
     Object.keys(F).forEach(k=>F[k]=(typeof F[k]==="boolean"?false:""));
-    $("#q").value="";["#f_track","#f_year","#f_day","#f_area","#f_pe","#f_sep","#f_ccc","#f_ose","#f_type"].forEach(s=>$(s).value="");
+    $("#q").value="";["#f_track","#f_year","#f_day","#f_area","#f_pe","#f_sep","#f_ccc","#f_ose","#f_type","#f_plan"].forEach(s=>$(s).value="");
     $("#t_low").checked=false;$("#t_fav").checked=false;render();
   });
 }
@@ -396,7 +897,7 @@ function foot(live){
     + DATA.length+" rows · Drive links resolve once files are on the shared drive with viewer access set.";
 }
 async function boot(){
-  loadFavs();buildFilters();bind();favSummary();
+  loadFavs();await loadPlan();buildFilters();bind();favSummary();
   if(CONFIG.feedUrl){
     try{
       const r=await fetch(CONFIG.feedUrl,{cache:"no-store"});
