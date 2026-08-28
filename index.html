@@ -104,6 +104,21 @@ body.curator .fix{display:inline-flex}
 .foot{max-width:1240px;margin:0 auto;padding:0 28px;color:var(--muted);font-size:12px}
 .curbanner{background:var(--gold-surface);border:1px solid var(--gold-line);color:var(--gold);font-size:12.5px;padding:8px 14px;border-radius:9px;margin-bottom:14px;display:none}
 body.curator .curbanner{display:block}
+
+/* favorites */
+.favbtn{flex:0 0 auto;appearance:none;background:#fff;border:1px solid var(--line);color:var(--muted);width:32px;height:32px;border-radius:50%;font-size:17px;line-height:1;padding-bottom:1px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s,color .12s,transform .08s}
+.favbtn:hover{background:var(--lav);border-color:var(--lav2);color:var(--purple2)}
+.favbtn:active{transform:scale(.9)}
+.favbtn:focus-visible{outline:2px solid var(--purple2);outline-offset:1px}
+.favbtn.on{background:#FDEBF1;border-color:#F0BFD0;color:#B02A5B}
+.favbtn.on:hover{background:#FADCE6;color:#B02A5B}
+.favbtn[disabled]{opacity:.35;cursor:default}
+.card.fav{border-left:3px solid #E3799F}
+.tog.heart input:checked{background:#B02A5B}
+.favtools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:11px;font-size:11.5px}
+.favtools .fcount{color:var(--muted)}
+.favtools button{appearance:none;background:none;border:none;padding:0;font:inherit;font-size:11.5px;color:var(--purple2);cursor:pointer;text-decoration:underline}
+.favtools button:hover{color:var(--purple)}
 </style>
 </head>
 <body>
@@ -132,9 +147,11 @@ body.curator .curbanner{display:block}
     <div class="field"><label for="f_ose">OpenSciEd unit</label><select id="f_ose"></select></div>
     <div class="field"><label for="f_type">Lesson type</label><select id="f_type"></select></div>
     <div class="toggles">
+      <label class="tog heart"><input type="checkbox" id="t_fav"><span class="lab"><strong>Favorites only</strong><span id="favSub">Heart a lesson to start a list</span></span></label>
       <label class="tog gold"><input type="checkbox" id="t_low"><span class="lab"><strong>Low-confidence only</strong><span>Worklist: tags that need a human check</span></span></label>
       <label class="tog"><input type="checkbox" id="t_cur"><span class="lab"><strong>Curator mode</strong><span>Show “fix tag in sheet” links</span></span></label>
     </div>
+    <div class="favtools"><span class="fcount" id="favCount">Nothing saved yet</span><button type="button" id="favClear" hidden>Clear favorites</button></div>
     <button class="clearbtn" id="clear">Clear all filters</button>
   </aside>
 
@@ -178,6 +195,33 @@ function fixUrl(d){
   return base; // snapshot mode: open the tab (row jump activates once live)
 }
 
+/* ---------- favorites (saved in this browser only) ---------- */
+const FAV_KEY="ftl.favorites.v1";
+let FAVS=new Set();
+function loadFavs(){
+  try{
+    const raw=localStorage.getItem(FAV_KEY);
+    if(raw)FAVS=new Set(JSON.parse(raw).filter(x=>typeof x==="string"));
+  }catch(e){ console.warn("Favorites storage unavailable:",e.message); FAVS=new Set(); }
+}
+function saveFavs(){
+  try{ localStorage.setItem(FAV_KEY,JSON.stringify([...FAVS])); }
+  catch(e){ console.warn("Could not save favorites:",e.message); }
+}
+function isFav(d){ return !!d.id && FAVS.has(d.id); }
+function toggleFav(d){
+  if(!d.id) return false;
+  if(FAVS.has(d.id)) FAVS.delete(d.id); else FAVS.add(d.id);
+  saveFavs();
+  return FAVS.has(d.id);
+}
+function favSummary(){
+  const n=FAVS.size;
+  const c=$("#favCount"); if(c) c.textContent = n ? (n+" saved in this browser") : "Nothing saved yet";
+  const b=$("#favClear"); if(b) b.hidden = (n===0);
+  const sub=$("#favSub"); if(sub) sub.textContent = n ? ("Show only the "+n+" you hearted") : "Heart a lesson to start a list";
+}
+
 /* ---------- CSV parse (published feed) ---------- */
 function parseCSV(text){
   const rows=[];let row=[],cur="",q=false;
@@ -214,7 +258,7 @@ function fromFeed(text){
 
 /* ---------- state ---------- */
 let DATA=BAKED.slice();
-const F={q:"",track:"",year:"",day:"",area:"",pe:"",sep:"",ccc:"",ose:"",type:"",low:false};
+const F={q:"",track:"",year:"",day:"",area:"",pe:"",sep:"",ccc:"",ose:"",type:"",low:false,fav:false};
 
 function uniqTokens(field,split){
   const s=new Set();
@@ -248,6 +292,7 @@ function match(d){
   if(F.ccc&&!tokens(d.ccc).includes(F.ccc))return false;
   if(F.ose&&!tokens(d.ose).includes(F.ose))return false;
   if(F.low&&!(d.oseConf==="Low"||d.fitConf==="Low"))return false;
+  if(F.fav&&!isFav(d))return false;
   if(F.q){const q=F.q.toLowerCase();const hay=(d.title+" "+d.summary+" "+d.id+" "+d.sub+" "+d.flags+" "+d.pe).toLowerCase();if(!hay.includes(q))return false;}
   return true;
 }
@@ -258,7 +303,7 @@ function render(){
   const list=DATA.filter(match);
   $("#count").innerHTML="<b>"+list.length+"</b> "+(list.length===1?"lesson":"lessons");
   const low=DATA.filter(d=>d.oseConf==="Low"||d.fitConf==="Low").length;
-  $("#hint").textContent = F.low ? "Reviewing low-confidence tags" : (low+" tagged low-confidence");
+  $("#hint").textContent = F.fav ? (FAVS.size+" favorite"+(FAVS.size===1?"":"s")+" saved") : (F.low ? "Reviewing low-confidence tags" : (low+" tagged low-confidence"));
   const box=$("#results");box.innerHTML="";
   if(!list.length){
     const e=el("div","empty");e.innerHTML="<b>No lessons match those filters.</b>Loosen a filter, or clear them to start over.";
@@ -267,7 +312,7 @@ function render(){
   const frag=document.createDocumentFragment();
   list.forEach(d=>{
     const flagged=(d.oseConf==="Low"||d.fitConf==="Low");
-    const card=el("div","card"+(flagged?" flagged":""));
+    const card=el("div","card"+(flagged?" flagged":"")+(isFav(d)?" fav":""));
     const head=el("div","chead");
     const left=el("div");
     left.appendChild(el("div","ctitle",d.title));
@@ -279,6 +324,22 @@ function render(){
     const badges=el("div","badges");
     if(d.kind==="assessment")badges.appendChild(el("span","kindtag","Assessment"));
     if(d.year)badges.appendChild(el("span","yr "+yearClass(d.year),d.year));
+    const favBtn=el("button","favbtn"+(isFav(d)?" on":""),isFav(d)?"\u2665":"\u2661");
+    favBtn.type="button";
+    favBtn.setAttribute("aria-pressed",isFav(d)?"true":"false");
+    if(!d.id){ favBtn.disabled=true; favBtn.title="No ID on this row, so it cannot be saved"; }
+    else { favBtn.title=isFav(d)?"Remove from favorites":"Save to favorites"; }
+    favBtn.addEventListener("click",()=>{
+      const on=toggleFav(d);
+      favBtn.classList.toggle("on",on);
+      favBtn.textContent=on?"\u2665":"\u2661";
+      favBtn.setAttribute("aria-pressed",on?"true":"false");
+      favBtn.title=on?"Remove from favorites":"Save to favorites";
+      card.classList.toggle("fav",on);
+      favSummary();
+      if(F.fav&&!on) render();
+    });
+    badges.appendChild(favBtn);
     head.appendChild(badges);
     card.appendChild(head);
 
@@ -314,11 +375,16 @@ function bind(){
   const m=[["#f_track","track"],["#f_year","year"],["#f_day","day"],["#f_area","area"],["#f_pe","pe"],["#f_sep","sep"],["#f_ccc","ccc"],["#f_ose","ose"],["#f_type","type"]];
   m.forEach(([id,k])=>$(id).addEventListener("change",e=>{F[k]=e.target.value;render();}));
   $("#t_low").addEventListener("change",e=>{F.low=e.target.checked;render();});
+  $("#t_fav").addEventListener("change",e=>{F.fav=e.target.checked;render();});
+  $("#favClear").addEventListener("click",()=>{
+    if(!FAVS.size)return;
+    FAVS.clear();saveFavs();favSummary();render();
+  });
   $("#t_cur").addEventListener("change",e=>{document.body.classList.toggle("curator",e.target.checked);});
   $("#clear").addEventListener("click",()=>{
-    Object.keys(F).forEach(k=>F[k]=(k==="low"?false:""));
+    Object.keys(F).forEach(k=>F[k]=(typeof F[k]==="boolean"?false:""));
     $("#q").value="";["#f_track","#f_year","#f_day","#f_area","#f_pe","#f_sep","#f_ccc","#f_ose","#f_type"].forEach(s=>$(s).value="");
-    $("#t_low").checked=false;render();
+    $("#t_low").checked=false;$("#t_fav").checked=false;render();
   });
 }
 function setStatus(live){
@@ -330,7 +396,7 @@ function foot(live){
     + DATA.length+" rows · Drive links resolve once files are on the shared drive with viewer access set.";
 }
 async function boot(){
-  buildFilters();bind();
+  loadFavs();buildFilters();bind();favSummary();
   if(CONFIG.feedUrl){
     try{
       const r=await fetch(CONFIG.feedUrl,{cache:"no-store"});
