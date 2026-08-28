@@ -1,5 +1,59 @@
 {
   "schema": "ftl.assignments/1",
   "updated": "2026-08-28",
-  "slots": {}
+  "slots": {
+    "LIFE-MICRO-D1-B1": {
+      "primary": [
+        "FTL-BIO-0065"
+      ],
+      "secondary": [
+        "FTL-BIO-0038"
+      ]
+    },
+    "LIFE-MICRO-D1-B3": {
+      "primary": [
+        "FTL-BIO-0067"
+      ],
+      "secondary": []
+    },
+    "LIFE-MICRO-D2-B1": {
+      "primary": [
+        "FTL-BIO-0034"
+      ],
+      "secondary": [
+        "FTL-BIO-0033",
+        "FTL-BIO-0066"
+      ]
+    },
+    "LIFE-MICRO-D2-B3": {
+      "primary": [
+        "FTL-VER-0182"
+      ],
+      "secondary": []
+    },
+    "LIFE-MICRO-D3-B1": {
+      "primary": [
+        "FTL-BIO-0001"
+      ],
+      "secondary": []
+    },
+    "LIFE-MICRO-D3-B3": {
+      "primary": [
+        "FTL-BIO-0028"
+      ],
+      "secondary": [
+        "FTL-BIO-0039",
+        "FTL-BIO-0002",
+        "FTL-BIO-0030"
+      ]
+    },
+    "LIFE-MICRO-D4-B1": {
+      "primary": [
+        "FTL-BIO-0026"
+      ],
+      "secondary": [
+        "FTL-BIO-0023"
+      ]
+    }
+  }
 }
