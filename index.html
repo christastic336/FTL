@@ -73,6 +73,10 @@ code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 .yr.micro{background:var(--lav);color:var(--purple);border:1px solid var(--lav2)}
 .yr.macro{background:var(--gold-surface);color:var(--gold);border:1px solid var(--gold-line)}
 .yr.both{background:#EEF3F3;color:var(--teal);border:1px solid #CFE3E3}
+.srctag{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#F4F1F7;color:var(--muted);border:1px solid var(--line)}
+.srctag.vernier{background:#EAF3F3;color:var(--teal);border-color:#CFE3E3}
+.srctag.captivate{background:var(--gold-surface);color:var(--gold);border-color:var(--gold-line)}
+.srctag.escape{background:#EEF0FA;color:#43509B;border-color:#D3D8EE}
 .kindtag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:2px 7px;border-radius:6px}
 
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0 0}
@@ -222,6 +226,7 @@ body.planview .shell{grid-template-columns:1fr}
     <h2>Filter</h2>
     <p class="railnote">Narrow the repository, then open the file to check it.</p>
     <div class="field"><label for="q">Search</label><input type="text" id="q" placeholder="title, topic, keyword, ID…"></div>
+    <div class="field"><label for="f_src">Source</label><select id="f_src"></select></div>
     <div class="field"><label for="f_track">Track</label><select id="f_track"></select></div>
     <div class="field"><label for="f_year">Year (rotation)</label><select id="f_year"></select></div>
     <div class="field"><label for="f_day">Day (concept spine)</label><select id="f_day"></select></div>
@@ -388,6 +393,30 @@ const BLOCKS={
 "PHYS-MACRO-D4-B3":{strand:"Physics",topic:"Circuits / Charged Balloons FRQ",sep:["S2","S7"],pe:["HS-PS3-5","HS-PS2-4"],ose:["C.2","P.1"],close:"Direct",status:"Built"}
 };
 const STRAND_AREA={"Biology":"Biology","Env Science":"Environmental","Chemistry":"Chemistry","Physics":"Physics"};
+
+/* ---------- lesson origin (Source_Archive, normalised) ---------- */
+const ORIGINS=["FTL","Vernier","Captivate","ESCAPE"];
+function originOf(d){
+  const s=(d.src||"").toLowerCase();
+  if(s.indexOf("vernier")>=0) return "Vernier";
+  if(s.indexOf("captivate")>=0) return "Captivate";
+  if(s.indexOf("escape")>=0) return "ESCAPE";
+  return "FTL";                      // LTF / LTF Chem / NMSI and the baked snapshot
+}
+function originCounts(){
+  const n={}; ORIGINS.forEach(o=>n[o]=0);
+  DATA.forEach(d=>{ const o=originOf(d); n[o]=(n[o]||0)+1; });
+  return n;
+}
+function fillSourceSelect(){
+  const sel=$("#f_src"); if(!sel) return;
+  const cur=sel.value, n=originCounts();
+  sel.innerHTML="";
+  sel.appendChild(new Option("All sources ("+DATA.length+")",""));
+  ORIGINS.forEach(o=>sel.appendChild(new Option(o+" ("+(n[o]?n[o]:"0 \u2014 coming soon")+")",o)));
+  sel.value=cur;
+  if(sel.value!==cur) F.src="";
+}
 function slotMeta(key){
   const b=BLOCKS[key]; if(!b) return null;
   const tk=key.slice(0,key.indexOf("-D"));
@@ -547,7 +576,7 @@ function fromFeed(text){
       id:get(r,"ID"),title:get(r,"Title"),kind:get(r,"ID").includes("-A")||/Set/.test(lt)?"assessment":"lesson",
       area:get(r,"Content_Area"),sub:get(r,"Sub_Content"),track:get(r,"FTL_Track"),year:get(r,"FTL_Year"),day:get(r,"FTL_Day"),
       sep:get(r,"SEP"),ccc:get(r,"CCC"),pe:get(r,"PE"),ose:get(r,"OpenSciEd_Unit"),type:lt,
-      oseConf:get(r,"OSE_Confidence"),fitConf:get(r,"FTL_Fit_Confidence"),
+      oseConf:get(r,"OSE_Confidence"),fitConf:get(r,"FTL_Fit_Confidence"),src:get(r,"Source_Archive"),
       driveId:get(r,"Drive_File_ID"),folder:/folder|unit-level|unit \(/i.test(ver)||/Set/.test(lt),
       summary:get(r,"Summary"),flags:get(r,"Notes_Flags"),fit:get(r,"FTL_Fit"),
       _row:i+1,_peCol:peCol
@@ -558,7 +587,7 @@ function fromFeed(text){
 
 /* ---------- state ---------- */
 let DATA=BAKED.slice();
-const F={q:"",track:"",year:"",day:"",area:"",pe:"",sep:"",ccc:"",ose:"",type:"",low:false,fav:false,plan:""};
+const F={q:"",track:"",year:"",day:"",area:"",pe:"",sep:"",ccc:"",ose:"",type:"",src:"",low:false,fav:false,plan:""};
 
 function uniqTokens(field,split){
   const s=new Set();
@@ -571,6 +600,7 @@ function fillSelect(id,vals,allLabel){
   vals.forEach(v=>sel.appendChild(new Option(v,v)));
 }
 function buildFilters(){
+  fillSourceSelect();
   fillSelect("#f_track",uniqTokens("track",false),"All tracks");
   fillSelect("#f_year",["Micro","Macro","Both"].filter(v=>DATA.some(d=>d.year===v)),"Both years");
   fillSelect("#f_day",uniqTokens("day",false),"All days");
@@ -587,6 +617,7 @@ function match(d){
   if(F.day&&d.day!==F.day)return false;
   if(F.area&&d.area!==F.area)return false;
   if(F.type&&d.type!==F.type)return false;
+  if(F.src&&originOf(d)!==F.src)return false;
   if(F.pe&&!tokens(d.pe).includes(F.pe))return false;
   if(F.sep&&!tokens(d.sep).includes(F.sep))return false;
   if(F.ccc&&!tokens(d.ccc).includes(F.ccc))return false;
@@ -629,6 +660,8 @@ function renderList(){
     left.appendChild(meta);
     head.appendChild(left);
     const badges=el("div","badges");
+    const og=originOf(d);
+    badges.appendChild(el("span","srctag "+og.toLowerCase(),og));
     if(d.kind==="assessment")badges.appendChild(el("span","kindtag","Assessment"));
     if(d.year)badges.appendChild(el("span","yr "+yearClass(d.year),d.year));
     const favBtn=el("button","favbtn"+(isFav(d)?" on":""),isFav(d)?"\u2665":"\u2661");
@@ -917,6 +950,7 @@ function bind(){
     FAVS.clear();saveFavs();favSummary();render();
   });
   $("#f_plan").addEventListener("change",e=>{F.plan=e.target.value;render();});
+  $("#f_src").addEventListener("change",e=>{F.src=e.target.value;render();});
   $("#v_repo").addEventListener("click",()=>{VIEW="repo";render();});
   $("#v_plan").addEventListener("click",()=>{VIEW="plan";render();});
   $("#planExport").addEventListener("click",exportPlan);
@@ -930,7 +964,7 @@ function bind(){
   $("#t_cur").addEventListener("change",e=>{document.body.classList.toggle("curator",e.target.checked);});
   $("#clear").addEventListener("click",()=>{
     Object.keys(F).forEach(k=>F[k]=(typeof F[k]==="boolean"?false:""));
-    $("#q").value="";["#f_track","#f_year","#f_day","#f_area","#f_pe","#f_sep","#f_ccc","#f_ose","#f_type","#f_plan"].forEach(s=>$(s).value="");
+    $("#q").value="";["#f_src","#f_track","#f_year","#f_day","#f_area","#f_pe","#f_sep","#f_ccc","#f_ose","#f_type","#f_plan"].forEach(s=>$(s).value="");
     $("#t_low").checked=false;$("#t_fav").checked=false;render();
   });
 }
