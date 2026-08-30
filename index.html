@@ -35,8 +35,13 @@ code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 @media(max-width:860px){.shell{grid-template-columns:1fr;padding:18px 16px 48px}}
 
 /* filter rail */
-.rail{position:sticky;top:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px}
-@media(max-width:860px){.rail{position:static}}
+.rail{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px}
+.rail::-webkit-scrollbar{width:10px}
+.rail::-webkit-scrollbar-track{background:transparent}
+.rail::-webkit-scrollbar-thumb{background:var(--lav2);border-radius:99px;border:3px solid var(--card)}
+.rail::-webkit-scrollbar-thumb:hover{background:#D8C6E6}
+.rail{scrollbar-width:thin;scrollbar-color:var(--lav2) transparent}
+@media(max-width:860px){.rail{position:static;max-height:none;overflow:visible}}
 .rail h2{font-family:"Fraunces",serif;font-size:15px;font-weight:600;margin:0 0 4px;color:var(--purple)}
 .railnote{font-size:12px;color:var(--muted);margin:0 0 14px}
 .field{margin-bottom:12px}
@@ -884,6 +889,21 @@ function renderBoard(){
   box.appendChild(frag);
 }
 
+/* ---------- filter rail sizing (so the bottom is always reachable) ---------- */
+function sizeRail(){
+  const r=document.querySelector(".rail");
+  if(!r) return;
+  if(window.matchMedia("(max-width:860px)").matches){ r.style.maxHeight=""; return; }
+  const top=Math.max(16, r.getBoundingClientRect().top);
+  r.style.maxHeight=Math.max(240, Math.round(window.innerHeight-top-16))+"px";
+}
+let railTick=false;
+function queueRail(){
+  if(railTick) return;
+  railTick=true;
+  requestAnimationFrame(()=>{ railTick=false; sizeRail(); });
+}
+
 /* ---------- view dispatch + plan chrome ---------- */
 let VIEW="repo";
 function updateChrome(){
@@ -903,7 +923,7 @@ function updateChrome(){
   $("#v_plan").classList.toggle("on",VIEW==="plan");
   document.body.classList.toggle("planview",VIEW==="plan");
 }
-function render(){ if(VIEW==="plan") renderBoard(); else renderList(); updateChrome(); }
+function render(){ if(VIEW==="plan") renderBoard(); else renderList(); updateChrome(); sizeRail(); }
 function planJSON(){
   const out={schema:"ftl.assignments/1",updated:new Date().toISOString().slice(0,10),slots:{}};
   Object.keys(PLAN.slots||{}).sort().forEach(k=>{
@@ -978,6 +998,9 @@ function foot(live){
 }
 async function boot(){
   loadFavs();await loadPlan();buildFilters();bind();favSummary();
+  window.addEventListener("scroll",queueRail,{passive:true});
+  window.addEventListener("resize",queueRail);
+  sizeRail();
   if(CONFIG.feedUrl){
     try{
       const r=await fetch(CONFIG.feedUrl,{cache:"no-store"});
