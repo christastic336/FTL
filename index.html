@@ -126,6 +126,7 @@ body.curator .curbanner{display:block}
 .vtab:hover{background:var(--lav);color:var(--purple2)}
 .vtab.on{background:var(--purple);border-color:var(--purple);color:#fff}
 .draftflag{font-size:11.5px;font-weight:600;color:var(--gold);background:var(--gold-surface);border:1px solid var(--gold-line);padding:5px 10px;border-radius:999px}
+.draftflag.stale{color:#A33;background:#FBECEC;border-color:#E7BEBE}
 .planbtn{appearance:none;font:inherit;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--lav2);background:#fff;color:var(--purple2);cursor:pointer}
 .planbtn:hover{background:var(--lav)}
 .planbtn.go{background:var(--purple);border-color:var(--purple);color:#fff}
@@ -402,6 +403,7 @@ const PLAN_KEY="ftl.plan.draft.v1";
 let PUBLISHED={slots:{}};
 let PLAN={slots:{}};
 let PLAN_SRC="none";
+let DRAFT_STALE=false;
 function normPlan(p){
   const o={};
   Object.keys((p&&p.slots)||{}).sort().forEach(k=>{
@@ -415,7 +417,7 @@ function planDirty(){ return normPlan(PLAN)!==normPlan(PUBLISHED); }
 function clonePlan(p){ return JSON.parse(JSON.stringify({slots:(p&&p.slots)||{}})); }
 function saveDraft(){
   try{
-    if(planDirty()) localStorage.setItem(PLAN_KEY,JSON.stringify(PLAN));
+    if(planDirty()) localStorage.setItem(PLAN_KEY,JSON.stringify({slots:PLAN.slots,base:normPlan(PUBLISHED)}));
     else localStorage.removeItem(PLAN_KEY);
   }catch(e){ console.warn("Draft not saved locally:",e.message); }
 }
@@ -424,8 +426,18 @@ function loadDraft(){
     const raw=localStorage.getItem(PLAN_KEY);
     if(!raw) return null;
     const d=JSON.parse(raw);
-    return (d&&d.slots)?{slots:d.slots}:null;
+    return (d&&d.slots)?{slots:d.slots,base:(d.base||null)}:null;
   }catch(e){ return null; }
+}
+function dropDraft(){ try{ localStorage.removeItem(PLAN_KEY); }catch(e){} }
+/* slots that exist in the published file but are missing from the draft */
+function hiddenByDraft(){
+  const pk=Object.keys(PUBLISHED.slots||{}).filter(k=>{
+    const s=PUBLISHED.slots[k]||{}; return (s.primary||[]).length||(s.secondary||[]).length;
+  });
+  return pk.filter(k=>{
+    const s=(PLAN.slots||{})[k]; return !s || (!(s.primary||[]).length && !(s.secondary||[]).length);
+  });
 }
 function planCount(){
   let pri=0,sec=0,filled=0;
@@ -845,7 +857,13 @@ function updateChrome(){
   const dirty=planDirty(), c=planCount();
   const flag=$("#draftFlag");
   flag.hidden=!dirty;
-  if(dirty) flag.textContent="Unsaved draft \u00b7 "+c.pri+" primary, "+c.sec+" secondary \u2014 export and commit to publish";
+  flag.classList.toggle("stale",!!(dirty&&DRAFT_STALE));
+  if(dirty){
+    const hid=DRAFT_STALE?hiddenByDraft().length:0;
+    flag.textContent = hid
+      ? ("This browser's draft is hiding "+hid+" published block"+(hid===1?"":"s")+" \u2014 Discard draft to load the published plan")
+      : ("Unsaved draft \u00b7 "+c.pri+" primary, "+c.sec+" secondary \u2014 export and commit to publish");
+  }
   $("#planDiscard").hidden=!dirty;
   $("#planExport").hidden=!(dirty||c.pri||c.sec);
   $("#v_repo").classList.toggle("on",VIEW==="repo");
@@ -875,7 +893,16 @@ async function loadPlan(){
   }catch(e){ console.warn("assignments.json not loaded:",e.message); }
   PLAN=clonePlan(PUBLISHED);
   const dr=loadDraft();
-  if(dr) PLAN=clonePlan(dr);
+  if(dr){
+    const pubNow=normPlan(PUBLISHED);
+    if(normPlan(dr)===pubNow){        // draft says the same thing the file does - retire it
+      dropDraft();
+    } else {
+      PLAN=clonePlan(dr);
+      // the file moved on after this draft was made
+      if(dr.base && dr.base!==pubNow) DRAFT_STALE=true;
+    }
+  }
 }
 
 /* ---------- wire up ---------- */
@@ -898,7 +925,7 @@ function bind(){
     const b=$("#planDiscard");
     if(!discardArmed){ discardArmed=true; b.textContent="Click again to discard"; setTimeout(()=>{discardArmed=false;b.textContent="Discard draft";},4000); return; }
     discardArmed=false; b.textContent="Discard draft";
-    PLAN=clonePlan(PUBLISHED); saveDraft(); render();
+    PLAN=clonePlan(PUBLISHED); DRAFT_STALE=false; dropDraft(); saveDraft(); render();
   });
   $("#t_cur").addEventListener("change",e=>{document.body.classList.toggle("curator",e.target.checked);});
   $("#clear").addEventListener("click",()=>{
