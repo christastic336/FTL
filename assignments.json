@@ -1,6 +1,6 @@
 {
   "schema": "ftl.assignments/1",
-  "updated": "2026-08-28",
+  "updated": "2026-08-30",
   "slots": {
     "LIFE-MICRO-D1-B1": {
       "primary": [
@@ -54,6 +54,88 @@
       "secondary": [
         "FTL-BIO-0023"
       ]
+    },
+    "PHYS-MACRO-D4-B2": {
+      "primary": [],
+      "secondary": [
+        "FTL-PHYS-0054"
+      ]
+    },
+    "PHYS-MICRO-D1-B1": {
+      "primary": [
+        "FTL-CHEM-0019"
+      ],
+      "secondary": [
+        "FTL-CHEM-0034",
+        "FTL-CHEM-0027"
+      ]
+    },
+    "PHYS-MICRO-D1-B3": {
+      "primary": [
+        "FTL-CHEM-0035"
+      ],
+      "secondary": [
+        "FTL-CHEM-0025"
+      ]
+    },
+    "PHYS-MICRO-D2-B1": {
+      "primary": [
+        "FTL-CHEM-0054"
+      ],
+      "secondary": [
+        "FTL-CHEM-0056",
+        "FTL-CHEM-0049"
+      ]
+    },
+    "PHYS-MICRO-D2-B2": {
+      "primary": [
+        "FTL-CHEM-0045"
+      ],
+      "secondary": []
+    },
+    "PHYS-MICRO-D2-B3": {
+      "primary": [
+        "FTL-CHEM-0030"
+      ],
+      "secondary": []
+    },
+    "PHYS-MICRO-D3-B1": {
+      "primary": [
+        "FTL-CHEM-0010"
+      ],
+      "secondary": [
+        "FTL-CHEM-0061"
+      ]
+    },
+    "PHYS-MICRO-D3-B3": {
+      "primary": [
+        "FTL-CHEM-0009"
+      ],
+      "secondary": [
+        "FTL-CHEM-0037"
+      ]
+    },
+    "PHYS-MICRO-D4-B1": {
+      "primary": [
+        "FTL-CHEM-0013"
+      ],
+      "secondary": [
+        "FTL-CHEM-0012",
+        "FTL-CHEM-0026",
+        "FTL-CHEM-0018"
+      ]
+    },
+    "PHYS-MICRO-D4-B2": {
+      "primary": [
+        "FTL-PHYS-0100"
+      ],
+      "secondary": []
+    },
+    "PHYS-MICRO-D4-B3": {
+      "primary": [
+        "FTL-PHYS-0102"
+      ],
+      "secondary": []
     }
   }
 }
