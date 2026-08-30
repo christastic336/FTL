@@ -198,6 +198,11 @@ body.planview .shell{grid-template-columns:1fr}
 .orphan{background:var(--gold-surface);border:1px solid var(--gold-line);border-radius:11px;padding:13px 15px;margin-top:6px;font-size:12.5px;color:var(--gold)}
 .orphan b{display:block;margin-bottom:6px;font-size:13px}
 .orphan .oline{padding:3px 0}
+.pitem .ptxt a.plink{color:var(--purple2);text-decoration:none;border-bottom:1px solid transparent}
+.pitem .ptxt a.plink:hover{color:var(--purple);border-bottom-color:var(--lav2);text-decoration:none}
+.pitem .ptxt a.plink:focus-visible{outline:2px solid var(--purple2);outline-offset:2px;border-radius:3px}
+.pitem .pkind{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 5px;vertical-align:1px}
+.pitem .pkind.nolink{color:var(--gold);border-color:var(--gold-line);background:var(--gold-surface)}
 </style>
 </head>
 <body>
@@ -780,7 +785,21 @@ function renderBoard(){
             const ld=lessonById(id);
             const it=el("div","pitem");
             const tx=el("div","ptxt");
-            tx.appendChild(document.createTextNode(ld?ld.title:("Unknown lesson "+id)));
+            if(ld){
+              const durl=driveUrl(ld);
+              if(durl){
+                const a=el("a","plink",ld.title);
+                a.href=durl; a.target="_blank"; a.rel="noopener";
+                a.title=(ld.folder?"Open folder":"Open file")+" \u2014 "+ld.title;
+                tx.appendChild(a);
+                if(ld.folder) tx.appendChild(el("span","pkind","folder"));
+              } else {
+                tx.appendChild(document.createTextNode(ld.title));
+                tx.appendChild(el("span","pkind nolink","no linked file"));
+              }
+            } else {
+              tx.appendChild(document.createTextNode("Unknown lesson "+id));
+            }
             if(ld){
               const ws=fitCheck(ld,key).filter(x=>x.lvl!=="note");
               if(ws.length) tx.appendChild(el("span","pwarn"+(worstLvl(ws)==="hard"?" hard":""),ws.map(x=>x.txt).join(" \u00b7 ")));
