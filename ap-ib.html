@@ -93,6 +93,27 @@ code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 .foot{max-width:1240px;margin:0 auto;padding:0 28px;color:var(--muted);font-size:12px}
 .egg{max-width:1240px;margin:0 auto;padding:14px 28px 34px;text-align:right;line-height:1;display:flex;justify-content:flex-end;align-items:center;gap:12px}
 .egg .ghost{font-family:"Fraunces",serif;font-style:italic;font-size:11.5px;color:var(--line);letter-spacing:.02em;transition:color .5s ease;cursor:default;user-select:none}
+.egg .wolfie{width:30px;height:34px;opacity:0;transition:opacity .45s ease;pointer-events:none;display:inline-block}
+.egg:hover .wolfie{opacity:1}
+.egg .wolfie .wg{transform-origin:23px 46px;animation:wolfieDance 1.15s ease-in-out infinite;animation-play-state:paused}
+.egg:hover .wolfie .wg{animation-play-state:running}
+.egg .wolfie .wnote{opacity:0;animation:wolfieNote 2.3s ease-out infinite;animation-play-state:paused}
+.egg:hover .wolfie .wnote{animation-play-state:running}
+@keyframes wolfieDance{
+  0%,100%{transform:translateY(0) rotate(-7deg)}
+  25%{transform:translateY(-3.5px) rotate(5deg) scaleY(1.03)}
+  50%{transform:translateY(0) rotate(7deg)}
+  75%{transform:translateY(-3.5px) rotate(-5deg) scaleY(1.03)}
+}
+@keyframes wolfieNote{
+  0%{opacity:0;transform:translate(0,0) rotate(0deg)}
+  20%{opacity:.95}
+  100%{opacity:0;transform:translate(7px,-15px) rotate(20deg)}
+}
+@media (prefers-reduced-motion:reduce){
+  .egg .wolfie .wg,.egg .wolfie .wnote{animation:none}
+  .egg:hover .wolfie .wnote{opacity:.9}
+}
 .egg:hover .ghost{color:var(--muted)}
 .egg a{display:inline-block;font-family:"Fraunces",serif;font-size:15px;color:var(--line);text-decoration:none;padding:2px 4px;transition:color .3s ease,transform .3s ease}
 .egg a:hover{color:var(--plum);transform:scale(1.35);text-decoration:none}
@@ -138,7 +159,27 @@ code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 </div>
 <div class="foot" id="foot"></div>
 <div class="egg">
-  <span class="ghost">&#9834; a Mozart&rsquo;s Ghost production</span>
+  <span class="wolfie" aria-hidden="true">
+    <svg viewBox="0 0 46 52" width="30" height="34" role="img">
+      <g class="wg">
+        <!-- sheet -->
+        <path d="M9,25 A14,14 0 0 1 37,25 V44 l-5.6,4.4 -5.6,-4.4 -5.6,4.4 -5.6,-4.4 -5.6,4.4 Z"
+              fill="#FCFEFE" stroke="#BFD6D6" stroke-width="1.2" stroke-linejoin="round"/>
+        <!-- powdered wig: side curls + crown -->
+        <ellipse cx="9.5" cy="24" rx="6" ry="5.2" fill="#F2F7F7" stroke="#C9DCDC" stroke-width="1"/>
+        <ellipse cx="36.5" cy="24" rx="6" ry="5.2" fill="#F2F7F7" stroke="#C9DCDC" stroke-width="1"/>
+        <path d="M11,18 A12,10 0 0 1 35,18 A13,7 0 0 0 11,18 Z" fill="#F2F7F7" stroke="#C9DCDC" stroke-width="1"/>
+        <!-- queue ribbon -->
+        <path d="M23,10.5 l3,-3 -3,-1.6 -3,1.6 Z" fill="#0E5257" opacity=".55"/>
+        <!-- face -->
+        <circle cx="18.5" cy="28" r="1.9" fill="#22333A"/>
+        <circle cx="27.5" cy="28" r="1.9" fill="#22333A"/>
+        <ellipse cx="23" cy="34" rx="2.2" ry="2.8" fill="#22333A" opacity=".72"/>
+      </g>
+      <text class="wnote" x="38" y="16" font-family="Fraunces,serif" font-size="13" fill="#12787E">&#9834;</text>
+    </svg>
+  </span>
+  <span class="ghost">a Mozart&rsquo;s Ghost production</span>
   <a href="index.html" id="pi" aria-label="Return to the FTL Lesson Repository">&pi;</a>
 </div>
 
