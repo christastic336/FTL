@@ -219,6 +219,8 @@ body.planview .shell{grid-template-columns:1fr}
 .pitem .ptxt a.plink:hover{color:var(--purple);border-bottom-color:var(--lav2);text-decoration:none}
 .pitem .ptxt a.plink:focus-visible{outline:2px solid var(--purple2);outline-offset:2px;border-radius:3px}
 .pitem .pkind{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 5px;vertical-align:1px}
+.pitem .pkind.pfold{text-decoration:none;color:var(--purple2);border-color:var(--lav2)}
+.pitem .pkind.pfold:hover{background:var(--lav)}
 .pitem .pkind.nolink{color:var(--gold);border-color:var(--gold-line);background:var(--gold-surface)}
 </style>
 </head>
@@ -604,7 +606,7 @@ function fromFeed(text){
       area:get(r,"Content_Area"),sub:get(r,"Sub_Content"),track:get(r,"FTL_Track"),year:get(r,"FTL_Year"),day:get(r,"FTL_Day"),
       sep:get(r,"SEP"),ccc:get(r,"CCC"),pe:get(r,"PE"),ose:get(r,"OpenSciEd_Unit"),type:lt,
       oseConf:get(r,"OSE_Confidence"),fitConf:get(r,"FTL_Fit_Confidence"),src:get(r,"Source_Archive"),
-      driveId:get(r,"Drive_File_ID"),folder:/folder|unit-level|unit \(/i.test(ver)||/Set/.test(lt),
+      driveId:get(r,"Drive_File_ID"),folderId:get(r,"Drive_Folder_ID"),folder:/folder|unit-level|unit \(/i.test(ver)||/Set/.test(lt),
       summary:get(r,"Summary"),flags:get(r,"Notes_Flags"),fit:get(r,"FTL_Fit"),
       _row:i+1,_peCol:peCol
     });
@@ -725,6 +727,7 @@ function renderList(){
     const url=driveUrl(d);
     if(url){const a=el("a","open"+(d.folder?" folder":""),(d.folder?"Open folder":"Open file"));a.href=url;a.target="_blank";a.rel="noopener";act.appendChild(a);}
     else act.appendChild(el("span","noid","No linked file"));
+    { const fl=folderLink(d); if(fl) act.appendChild(fl); }
     const conf=el("span","conf "+((d.oseConf==="Low"||d.fitConf==="Low")?"low":(d.oseConf==="High"||d.fitConf==="High")?"high":"med"));
     conf.appendChild(el("span","cdot"));
     conf.appendChild(document.createTextNode((flagged?"Low confidence":(d.oseConf||"—")+" confidence")));
@@ -867,6 +870,7 @@ function renderBoard(){
                 a.title=(ld.folder?"Open folder":"Open file")+" \u2014 "+ld.title;
                 tx.appendChild(a);
                 if(ld.folder) tx.appendChild(el("span","pkind","folder"));
+                else { const fid=folderIdFor(ld); if(fid){ const fl=el("a","pkind pfold","folder"); fl.href=folderUrl(fid); fl.target="_blank"; fl.rel="noopener"; fl.title="Open the Drive folder for "+ld.title; tx.appendChild(fl); } }
               } else {
                 tx.appendChild(document.createTextNode(ld.title));
                 tx.appendChild(el("span","pkind nolink","no linked file"));
@@ -1027,8 +1031,27 @@ function foot(live){
   $("#foot").innerHTML = (live?"Reading live from the Google Sheet. ":"Running on the built-in snapshot ("+SNAPSHOT_DATE+"). Paste your published-CSV URL into CONFIG.feedUrl to go live. ")
     + DATA.length+" rows · Drive links resolve once files are on the shared drive with viewer access set.";
 }
+/* ---------- folder links (Drive_Folder_ID column > folders.json byFile > byBook) ---------- */
+var FOLDERS={byFile:{},byBook:{}};
+async function loadFolders(){
+  try{ const r=await fetch("folders.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); FOLDERS={byFile:j.byFile||{},byBook:j.byBook||{}}; } }
+  catch(e){ /* no folder map: file links still work */ }
+}
+function folderIdFor(d){
+  if(!d||d.folder||!d.driveId) return null;
+  return d.folderId||FOLDERS.byFile[d.driveId]||(d.book&&FOLDERS.byBook[d.book])||null;
+}
+function folderUrl(id){ return "https://drive.google.com/drive/folders/"+id; }
+function folderLink(d){
+  const id=folderIdFor(d); if(!id) return null;
+  const a=el("a","open folder",d.book?"Open book folder":"Open folder");
+  a.href=folderUrl(id); a.target="_blank"; a.rel="noopener";
+  a.title=d.book?("Every lab in "+d.book+" lives in this folder"):"Open the Drive folder this file lives in";
+  return a;
+}
 async function boot(){
-  loadFavs();await loadPlan();buildFilters();bind();favSummary();
+  loadFavs();await loadPlan();await loadFolders();buildFilters();bind();favSummary();
   window.addEventListener("scroll",queueRail,{passive:true});
   window.addEventListener("resize",queueRail);
   sizeRail();

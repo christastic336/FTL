@@ -121,6 +121,14 @@ code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 #wave:hover{color:#2F5E3E}
 #wave:focus-visible{color:#2F5E3E;outline-color:#2F5E3E}
 .egg a:focus-visible{color:var(--plum);outline:1px dotted var(--plum);outline-offset:3px}
+
+.lfbtn{cursor:pointer;font-family:inherit}
+.lfpanel{margin-top:12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:6px 12px 10px;font-size:12.5px}
+.lfsec h5{margin:10px 0 4px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.lfrow{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;padding:2px 0}
+.lfname{flex:1 1 220px;color:var(--text)}
+.lffmt{font-size:10.5px;font-weight:600;border:1px solid var(--line);border-radius:5px;padding:1px 7px;background:#fff;color:var(--text);text-decoration:none}
+.lffmt:hover{border-color:var(--muted);text-decoration:none}
 </style>
 </head>
 <body>
@@ -301,6 +309,8 @@ function render(){
     const act=el("div","actions");
     const url=driveUrl(d);
     if(url){ const a=el("a","open"+(d.folder?" folder":""),d.folder?"Open folder":"Open lab"); a.href=url; a.target="_blank"; a.rel="noopener"; act.appendChild(a); }
+    { const fl=folderLink(d); if(fl) act.appendChild(fl); }
+    { const lb=lessonFilesBtn(d,card); if(lb) act.appendChild(lb); }
     if(d.book) act.appendChild(el("span","booktag",d.book));
     card.appendChild(act);
     frag.appendChild(card);
@@ -345,8 +355,56 @@ function foot(live){
     + (live?"updated from apib.json":"built-in snapshot ("+SNAPSHOT_DATE+")")
     + " \u00b7 Drive links resolve for anyone with viewer access to the shared folders.";
 }
+/* ---------- folder links (Drive_Folder_ID column > folders.json byFile > byBook) ---------- */
+var LF={groups:{},byFile:{},roots:{}};
+async function loadLessonFiles(){
+  try{ const r=await fetch("lessonfiles.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); LF={groups:j.groups||{},byFile:j.byFile||{},roots:j.roots||{}}; } }
+  catch(e){ /* no lesson index: single-file links still work */ }
+}
+function lfGroup(d){ const g=d&&d.driveId&&LF.byFile[d.driveId]; return g?LF.groups[g]:null; }
+function lessonFilesBtn(d,card){
+  const grp=lfGroup(d); if(!grp) return null;
+  let n=0; grp.forEach(s=>s.f.forEach(f=>{n+=f.o.length;}));
+  const b=el("button","open folder lfbtn","Lesson files \u00b7 "+n); b.type="button"; b.setAttribute("aria-expanded","false");
+  let panel=null;
+  b.addEventListener("click",()=>{
+    if(panel){ panel.remove(); panel=null; b.setAttribute("aria-expanded","false"); return; }
+    panel=el("div","lfpanel");
+    grp.forEach(s=>{
+      const sec=el("div","lfsec"); sec.appendChild(el("h5",null,s.l));
+      s.f.forEach(f=>{
+        const row=el("div","lfrow"); row.appendChild(el("span","lfname",f.n));
+        f.o.forEach(o=>{ const a=el("a","lffmt",o[0]); a.href="https://drive.google.com/open?id="+o[1]; a.target="_blank"; a.rel="noopener"; a.title="Open "+f.n+" ("+o[0]+")"; row.appendChild(a); });
+        sec.appendChild(row);
+      });
+      panel.appendChild(sec);
+    });
+    card.appendChild(panel); b.setAttribute("aria-expanded","true");
+  });
+  return b;
+}
+var FOLDERS={byFile:{},byBook:{}};
+async function loadFolders(){
+  try{ const r=await fetch("folders.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); FOLDERS={byFile:j.byFile||{},byBook:j.byBook||{}}; } }
+  catch(e){ /* no folder map: file links still work */ }
+}
+function folderIdFor(d){
+  if(!d||d.folder||!d.driveId) return null;
+  { const g=LF.byFile[d.driveId]; if(g&&LF.roots[g]) return LF.roots[g]; }
+  return d.folderId||FOLDERS.byFile[d.driveId]||(d.book&&FOLDERS.byBook[d.book])||null;
+}
+function folderUrl(id){ return "https://drive.google.com/drive/folders/"+id; }
+function folderLink(d){
+  const id=folderIdFor(d); if(!id) return null;
+  const a=el("a","open folder",d.book?"Open book folder":"Open folder");
+  a.href=folderUrl(id); a.target="_blank"; a.rel="noopener";
+  a.title=d.book?("Every lab in "+d.book+" lives in this folder"):"Open the Drive folder this file lives in";
+  return a;
+}
 async function boot(){
-  loadFavs();
+  loadFavs(); await loadFolders(); await loadLessonFiles();
   let live=false;
   try{
     const r=await fetch("apib.json",{cache:"no-store"});
