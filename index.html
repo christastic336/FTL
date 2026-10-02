@@ -725,7 +725,13 @@ function renderList(){
 
     const act=el("div","actions");
     const url=driveUrl(d);
-    if(url){const a=el("a","open"+(d.folder?" folder":""),(d.folder?"Open folder":"Open file"));a.href=url;a.target="_blank";a.rel="noopener";act.appendChild(a);}
+    if(url){
+      const li=lessonInfo(d);
+      const a=el("a","open"+(d.folder?" folder":""),(d.folder?"Open folder":"Open file"));
+      if(li&&li.t){ a.href="https://drive.google.com/open?id="+li.t; a.title="Opens the teacher edition"+(li.tn?": "+li.tn:""); }
+      else { a.href=url; if(li) a.title="No teacher edition found for this lab \u2014 opens the student version"; }
+      a.target="_blank";a.rel="noopener";act.appendChild(a);
+    }
     else act.appendChild(el("span","noid","No linked file"));
     { const fl=folderLink(d); if(fl) act.appendChild(fl); }
     const conf=el("span","conf "+((d.oseConf==="Low"||d.fitConf==="Low")?"low":(d.oseConf==="High"||d.fitConf==="High")?"high":"med"));
@@ -866,8 +872,9 @@ function renderBoard(){
               const durl=driveUrl(ld);
               if(durl){
                 const a=el("a","plink",ld.title);
-                a.href=durl; a.target="_blank"; a.rel="noopener";
-                a.title=(ld.folder?"Open folder":"Open file")+" \u2014 "+ld.title;
+                const lin=lessonInfo(ld);
+                a.href=(lin&&lin.t)?("https://drive.google.com/open?id="+lin.t):durl; a.target="_blank"; a.rel="noopener";
+                a.title=(ld.folder?"Open folder":"Open file")+(lin&&lin.t?" (teacher edition)":"")+" \u2014 "+ld.title;
                 tx.appendChild(a);
                 if(ld.folder) tx.appendChild(el("span","pkind","folder"));
                 else { const fid=folderIdFor(ld); if(fid){ const fl=el("a","pkind pfold","folder"); fl.href=folderUrl(fid); fl.target="_blank"; fl.rel="noopener"; fl.title="Open the Drive folder for "+ld.title; tx.appendChild(fl); } }
@@ -1032,6 +1039,14 @@ function foot(live){
     + DATA.length+" rows · Drive links resolve once files are on the shared drive with viewer access set.";
 }
 /* ---------- folder links (Drive_Folder_ID column > folders.json byFile > byBook) ---------- */
+/* ---------- lesson folders + teacher editions (lessonfolders.json) ---------- */
+var LFOLD={lessons:{},byFile:{}};
+async function loadLessonFolders(){
+  try{ const r=await fetch("lessonfolders.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); LFOLD={lessons:j.lessons||{},byFile:j.byFile||{}}; } }
+  catch(e){ /* no lesson-folder map: the existing links still work */ }
+}
+function lessonInfo(d){ const id=d&&!d.folder&&d.driveId&&LFOLD.byFile[d.driveId]; return id?(LFOLD.lessons[id]||null):null; }
 var FOLDERS={byFile:{},byBook:{}};
 async function loadFolders(){
   try{ const r=await fetch("folders.json",{cache:"no-store"});
@@ -1040,10 +1055,18 @@ async function loadFolders(){
 }
 function folderIdFor(d){
   if(!d||d.folder||!d.driveId) return null;
+  { const li=lessonInfo(d); if(li&&li.f) return li.f; }
   return d.folderId||FOLDERS.byFile[d.driveId]||(d.book&&FOLDERS.byBook[d.book])||null;
 }
 function folderUrl(id){ return "https://drive.google.com/drive/folders/"+id; }
 function folderLink(d){
+  const li=lessonInfo(d);
+  if(li&&li.f){
+    const a=el("a","open folder","Open lesson folder");
+    a.href=folderUrl(li.f); a.target="_blank"; a.rel="noopener";
+    a.title="Every file for this lab in one folder: student and teacher editions, all software versions";
+    return a;
+  }
   const id=folderIdFor(d); if(!id) return null;
   const a=el("a","open folder",d.book?"Open book folder":"Open folder");
   a.href=folderUrl(id); a.target="_blank"; a.rel="noopener";
@@ -1051,7 +1074,7 @@ function folderLink(d){
   return a;
 }
 async function boot(){
-  loadFavs();await loadPlan();await loadFolders();buildFilters();bind();favSummary();
+  loadFavs();await loadPlan();await loadFolders();await loadLessonFolders();buildFilters();bind();favSummary();
   window.addEventListener("scroll",queueRail,{passive:true});
   window.addEventListener("resize",queueRail);
   sizeRail();
