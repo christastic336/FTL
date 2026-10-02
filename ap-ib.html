@@ -308,7 +308,13 @@ function render(){
     if(d.sensors) card.appendChild(el("div","sensors","\u26a1 "+d.sensors));
     const act=el("div","actions");
     const url=driveUrl(d);
-    if(url){ const a=el("a","open"+(d.folder?" folder":""),d.folder?"Open folder":"Open lab"); a.href=url; a.target="_blank"; a.rel="noopener"; act.appendChild(a); }
+    if(url){
+      const li=lessonInfo(d);
+      const a=el("a","open"+(d.folder?" folder":""),d.folder?"Open folder":"Open lab");
+      if(li&&li.t){ a.href="https://drive.google.com/open?id="+li.t; a.title="Opens the teacher edition"+(li.tn?": "+li.tn:""); }
+      else { a.href=url; if(li) a.title="No teacher edition found for this lab \u2014 opens the student version"; }
+      a.target="_blank"; a.rel="noopener"; act.appendChild(a);
+    }
     { const fl=folderLink(d); if(fl) act.appendChild(fl); }
     { const lb=lessonFilesBtn(d,card); if(lb) act.appendChild(lb); }
     if(d.book) act.appendChild(el("span","booktag",d.book));
@@ -384,6 +390,14 @@ function lessonFilesBtn(d,card){
   });
   return b;
 }
+/* ---------- lesson folders + teacher editions (lessonfolders.json) ---------- */
+var LFOLD={lessons:{},byFile:{}};
+async function loadLessonFolders(){
+  try{ const r=await fetch("lessonfolders.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); LFOLD={lessons:j.lessons||{},byFile:j.byFile||{}}; } }
+  catch(e){ /* no lesson-folder map: the existing links still work */ }
+}
+function lessonInfo(d){ const id=d&&!d.folder&&d.driveId&&LFOLD.byFile[d.driveId]; return id?(LFOLD.lessons[id]||null):null; }
 var FOLDERS={byFile:{},byBook:{}};
 async function loadFolders(){
   try{ const r=await fetch("folders.json",{cache:"no-store"});
@@ -397,6 +411,13 @@ function folderIdFor(d){
 }
 function folderUrl(id){ return "https://drive.google.com/drive/folders/"+id; }
 function folderLink(d){
+  const li=lessonInfo(d);
+  if(li&&li.f){
+    const a=el("a","open folder","Open lesson folder");
+    a.href=folderUrl(li.f); a.target="_blank"; a.rel="noopener";
+    a.title="Every file for this lab in one folder: student and teacher editions, all software versions";
+    return a;
+  }
   const id=folderIdFor(d); if(!id) return null;
   const a=el("a","open folder",d.book?"Open book folder":"Open folder");
   a.href=folderUrl(id); a.target="_blank"; a.rel="noopener";
@@ -404,7 +425,7 @@ function folderLink(d){
   return a;
 }
 async function boot(){
-  loadFavs(); await loadFolders(); await loadLessonFiles();
+  loadFavs(); await loadFolders(); await loadLessonFiles(); await loadLessonFolders();
   let live=false;
   try{
     const r=await fetch("apib.json",{cache:"no-store"});
